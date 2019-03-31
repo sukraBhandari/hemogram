@@ -1,0 +1,7 @@
+Dear {{user.user_first_name}} {{ user.user_last_name}},
+
+
+<p>To confirm your account please <a href="{{ url_for('main.confirm', token=token, _external=True) }}">click here</a>.</p>
+
+<p>Sincerely,</p>
+<p>-Hemogram</p>

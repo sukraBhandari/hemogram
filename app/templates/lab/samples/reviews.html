@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Path Review- {{find_review}}</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Patients</h6>
+               
+            </div>
+            <div class="card-body">
+               <div class="table-responsive text-black">
+                  <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                        <tr>     <th></th>
+                        <th>Sample ID</th>                        
+                        <th>Patient Full Name</th>
+                        <th>Test</th>                        
+                        <th>Received At</th>
+                        <th>Doctor/Provider</th>
+                        <th>DIFF Status</th>
+                        <th>PATHRV Status</th>
+                        <th>Completed At</th>
+                        <th>Clinic</th>
+                     </tr>
+                  </thead>
+                  <tfoot>
+                  <tr><th></th>
+                  <th>Sample ID</th>                        
+                        <th>Patient Full Name</th>
+                        <th>Test</th>                        
+                        <th>Received At</th>
+                        <th>Doctor/Provider</th>
+                        <th>DIFF Status</th>
+                        <th>PATHRV Status</th>
+                        <th>Completed At</th>
+                        <th>Clinic</th>
+               </tr>
+               </tfoot>
+               <tbody>
+                  
+               </tbody>
+            </table>
+         </div>
+         
+         
+      </div>
+   </div>
+</div>
+</div>
+{% endblock content %}
+{% block script %}
+   <script src="{{url_for('static', filename='Packages/datatables/jquery.dataTables.min.js')}}"></script>
+   <script src="{{url_for('static', filename='Packages/datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $('#dataTable').DataTable( {        
+              "ajax": "{{url_for('lab.json_reviews', status=find_review)}}",
+              "order": [[6, "desc"]],
+              "columns": [
+                  { className: 'text-center',
+                    data: null, render: function ( data ) {
+                      // button options for users
+                      button_option =   '<a class="btn btn-sm btn-primary m-1" href="/lab/samples/'+data.id+'" class="editor_edit" title="Lab Report"><i class="fas fa-binoculars"></i> </a>'
+                      {% if current_user.can(Privilege.UPDATE) %} 
+                        if (!data.path_status){
+                         button_option += '<a class="btn btn-sm btn-success m-1" href="/lab/smears/'+data.id+'/diff" class="editor_edit" title="Path Review"><i class="fas fa-microscope"></i> </a>'                    
+                        }
+                      {% endif %}       
+                      return button_option;
+                  } },
+                  { "data": "id" },
+                  { "data": "patient" },
+                  {"data": "test"}, 
+                  { data: null, render:function(data){
+                    return moment(data.events['CREATED']).format('MMM Do YYYY HH:mm');
+                  } },    
+                  {"data": "provider"},        
+                  { data: null, render:function(data){
+                    return (data.status ? "Completed" : "In Progress");
+                  } },  
+                  { data: null, render:function(data){
+                    return (data.path_status ? "<strong>Completed</strong>" : "<strong>In Progress</strong>");
+                  } },                
+                  { data: null, render:function(data){
+                    return (data.path_status ? moment(data.events['PATH_REVIEWED']).format('MMM Do YYYY HH:mm') : '-' ) ;
+                  } }, 
+                  {"data" : "clinic"}
+              ]
+          } );
+      } );
+   </script>
+
+    
+{% endblock %} 

@@ -1,0 +1,17 @@
+<html>
+<head></head>
+<body>
+	<p>Dear {{user.user_first_name}} {{user.user_last_name}},</p>
+	<div style="margin-left: 1em;">Please confirm your account using following link,</div>
+	<div style="margin-left: 1em;"><a href="{{ url_for('main.confirm', token=token, _external=True) }}">click here</a></div><br>
+	<div style="margin-left: 1em;">
+		Your temporary password is<br>
+		{{temp_pass}}<br>
+		You will be prompted to change your password after first login.<br><br>
+	</div>
+	<p>
+		Sincerely,<br>
+		<code>-Hemogram</code>
+	</p>
+</body>
+</html>

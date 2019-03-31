@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Morphologies</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Morphologies</h6>
+               <div>
+                  {% if current_user.can(Privilege.MODERATE) %}
+                     <a class="btn btn-sm btn-primary" href="#" role="button"  title="Add Morphology"><i class="fas fa-plus-square"></i></a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body">
+               <nav>
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#wbc-morph" role="tab" aria-controls="nav-home" aria-selected="true">WBC</a>
+                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#rbc-morph" role="tab" aria-controls="nav-profile" aria-selected="false">RBC</a>
+                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#platelet-morph" role="tab" aria-controls="nav-contact" aria-selected="false">PLATELET</a>
+                  </div>
+               </nav>
+               <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="wbc-morph" role="tabpanel" aria-labelledby="nav-home-tab">
+                     <br>
+                     <table class="table table-responsive-sm table-hover table-outline mb-0">
+                        <thead class="thead-light">
+                           <tr>
+                              <th class="text-center">
+                                 <i class="fas fa-file"></i>
+                              </th>
+                              <th >WBC Morphology</th>
+                              <th >Options</th>
+                              <th class="text-center">Action</th>
+                           </tr>
+                        </thead>
+                        <tbody>                           
+                           {% for m in morphologies if m.cell_type.name=='WBC' %}                              
+                              <tr>
+                                 <td class="text-center">
+                                    <strong >
+                                       {{ loop.index }}
+                                    </strong>
+                                 </td>
+                                 <td>
+                                    <div>{{ m.morph_name }}</div>
+                                 </td>
+                                 <td>
+                                    {{m.options if m.options else 'Present | Absent'}}
+                                 </td>
+                                 <td class="text-center">
+                                    {% if current_user.can(Privilege.MODERATE) %}
+                                       <a class="btn btn-sm btn-primary" href="#" role="button"  title="Edit">
+                                          <i class="far fa-edit"></i>
+                                       </a>
+                                    {% endif %}
+                                 </td>
+                              </tr>                              
+                           {% endfor %}                           
+                        </tbody>
+                     </table>                     
+                  </div>
+                  <div class="tab-pane fade" id="rbc-morph" role="tabpanel" aria-labelledby="nav-profile-tab">
+                     <br>
+                     <table class="table table-responsive-sm table-hover table-outline mb-0">
+                        <thead class="thead-light">
+                           <tr>
+                              <th class="text-center">
+                                 <i class="fas fa-file"></i>
+                              </th>
+                              <th >RBC Morphology</th>
+                              <th >Options</th>
+                              <th class="text-center">Action</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {% for m in morphologies if m.cell_type=='rbc'  %}                          
+                              <tr>
+                                 <td class="text-center">
+                                    <strong >
+                                    {{ loop.index }}
+                                    </strong>
+                                 </td>
+                                 <td>
+                                    <div>{{ m.morph_name }}</div>
+                                 </td>
+                                 <td>
+                                    {% for key, value in m.options.items() %}
+                                       {{value }}
+                                    {% endfor %}
+                                 </td>
+                                 <td class="text-center">
+                                    {% if current_user.can(Privilege.MODERATE) %}
+                                       <a class="btn btn-sm btn-primary" href="#}" role="button"  title="Edit">
+                                          <i class="far fa-edit"></i>
+                                       </a>
+                                    {% endif %}
+                                 </td>
+                              </tr>                              
+                           {% endfor %}                           
+                        </tbody>
+                     </table>
+                  </div>
+                  <div class="tab-pane fade" id="platelet-morph" role="tabpanel" aria-labelledby="nav-contact-tab">
+                     <br>
+                     <table class="table table-responsive-sm table-hover table-outline mb-0">
+                        <thead class="thead-light">
+                           <tr>
+                              <th class="text-center">
+                                 <i class="fas fa-file"></i>
+                              </th>
+                              <th >Platelet Morphology</th>
+                              <th >Options</th>
+                              <th class="text-center">Action</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           {% for m in morphologies if m.cell_type=='platelet' %}                 
+                              <tr>
+                                 <td class="text-center">
+                                    <strong >
+                                    {{ loop.index }}
+                                    </strong>
+                                 </td>
+                                 <td>
+                                    <div>{{ m.morphology }}</div>
+                                 </td>
+                                 <td>
+                                    {{m.options}}
+                                 </td>
+                                 <td class="text-center">
+                                    {% if current_user.can(Privilege.MODERATE) %}
+                                       <a class="btn btn-sm btn-primary" href="#}" role="button"  title="Edit">
+                                          <i class="far fa-edit"></i>
+                                       </a>
+                                    {% endif %}
+                                 </td>
+                              </tr>                              
+                           {% endfor %}                           
+                        </tbody>
+                     </table>
+                  </div>
+               </div>               
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_procedures')}}">Procedures</a></li>
+         <li class="breadcrumb-item active" aria-current="page">{{procedure.title}}</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">{{procedure.title}}</h6>
+               <div>
+                  {% if current_user.can(Privilege.MODERATE) %}
+                     <a class="btn btn-sm btn-primary" href="{{ url_for('lab.edit_procedure', id=procedure.id) }}" role="button"  title="Edit"><i class="far fa-edit"></i></a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body">
+               {{procedure.content_html | safe}}
+            </div>
+         </div>
+      </div>
+   </div>   
+{% endblock content %}

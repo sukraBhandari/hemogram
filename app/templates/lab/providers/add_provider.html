@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_providers')}}">Providers</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Add</li>
+      </ol>
+   </nav>
+   <div class="container">
+      {% include '_flash.html' %}
+      <div class="row justify-content-center">
+         <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+               <div class="card-header text-center">
+                  <span class="text-muted">Provider Information.</span>
+               </div>
+               <div class="card-body p-0">
+                  <div class="p-4">
+                     <div class="text-center">
+                        <h1 class="h4 text-gray-900 mb-4">Add a Provider!</h1>
+                        <p class="mb-2">Please enter all fields.</p>
+                        <hr>
+                     </div>
+                     <form method="POST" action="" >
+                        {{ form.hidden_tag() }}
+                        <div class="form-row">
+                           <div class="form-group col-md-4">
+                              <div class="form-group">
+                                 {{ form.f_name.label(class="form-control-label") }}
+                                 {% if form.f_name.errors %}
+                                    {{ form.f_name(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.f_name.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.f_name(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                           </div>
+                           <div class="form-group col-md-4">
+                              <div class="form-group">
+                                 {{ form.m_name.label(class="form-control-label") }}
+                                 {% if form.m_name.errors %}
+                                    {{ form.m_name(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.m_name.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.m_name(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                           </div>
+                           <div class="form-group col-md-4">
+                              <div class="form-group">
+                                 {{ form.l_name.label(class="form-control-label") }}
+                                 {% if form.l_name.errors %}
+                                    {{ form.l_name(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.l_name.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.l_name(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                           </div>
+                        </div>
+                        <div class="form-row">
+                           <div class="form-group col-md-4">
+                              <div class="form-group">
+                                 {{ form.degree.label(class="form-control-label") }}
+                                 {% if form.degree.errors %}
+                                    {{ form.degree(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.degree.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.degree(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                           </div>                           
+                        </div>
+                        <div class="container">
+                           <div class="row justify-content-around">
+                              <div class="col-6">
+                                 {{ form.submit(class="btn btn-primary btn-user btn-block bg-purple") }}
+                              </div>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}

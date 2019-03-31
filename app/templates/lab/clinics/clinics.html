@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Clinics</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Clinics</h6>
+               <div>
+                  {% if current_user.can(Privilege.ADMIN) %}
+                     <a class="btn btn-sm btn-primary" href="{{ url_for('lab.add_clinic') }}" role="button"  title="Add Clinic"><i class="fas fa-plus-square"></i></a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body">
+               <br>
+               <table class="table table-responsive-sm table-hover table-outline mb-0">
+                  <thead class="thead-light">
+                     <tr>
+                        <th class="text-center">
+                           <i class="fas fa-hospital"></i>
+                        </th>
+                        <th >Clinic Code</th>
+                        <th >Clinic Name</th>
+                        <th class="text-center">Action</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     {% for clinic in clinics %}
+                        <tr>
+                           <td class="text-center">
+                              <strong >
+                              {{ loop.index }}
+                              </strong>
+                           </td>
+                           <td>
+                              <strong>{{ clinic.clinic_code_name }}</strong>
+                           </td>
+                           <td>
+                              <div>{{ clinic.clinic_full_name }}</div>
+                           </td>
+                           <td class="text-center">
+                              <a class="btn btn-sm btn-primary" href="{{ url_for('lab.clinic', id=clinic.id) }}" role="button"  title="View">
+                                 <i class="fas fa-eye"></i>
+                              </a>                              
+                              {% if current_user.can(Privilege.ADMIN) %}
+                                 <a class="btn btn-sm btn-primary" href="{{ url_for('lab.edit_clinic', id=clinic.id) }}" role="button"  title="Edit">
+                                    <i class="far fa-edit"></i>
+                                 </a>
+                              {% endif %}
+                           </td>                           
+                        </tr>
+                     {% endfor %}
+                  </tbody>
+               </table>               
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}

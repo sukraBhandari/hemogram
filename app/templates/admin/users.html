@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Admin</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Users</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Users</h6>
+               <div>
+                  {% if current_user.can(Privilege.ADMIN) %}
+                     <a class="btn btn-sm btn-primary" href="{{ url_for('admin.register') }}" role="button"  title="Add User"><i class="fas fa-plus-square"></i></a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body">
+               <div class="card-columns">
+                  {% for user in users %}
+                     <div class="card">
+                        <div class="card-header bg-gold py-3 d-flex flex-row align-items-center justify-content-between">
+                           <h6 class="m-0 font-weight-bold text-primary">{{user.username}}</h6>
+                           <div class="dropdown no-arrow">
+                              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fas fa-ellipsis-v fa-sm fa-fw "></i>
+                              </a>
+                              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                 <div class="dropdown-header">More</div>
+                                 <div class="dropdown-divider"></div>
+                                 <a class="dropdown-item" href="#">
+                                    <i class="fas fa-envelope fa-sm fa-fw mr-2 text-gray-400"></i>
+                                 Send Message</a>
+                                 {% if current_user.is_administrator() %}
+                                    <a class="dropdown-item " href="{{ url_for('admin.edit_user', id=user.id) }}">
+                                       <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Edit User</a>
+                                 {% endif %}
+                              </div>
+                           </div>
+                        </div>
+                        <div class="card-body bg-grey text-center">
+                           <img class="rounded-circle account-img" src="{{url_for('static', filename='images/profile_img/'+ user.profile_image)}} "/>
+                           <h5 class="card-title">{{ user.f_name }} {{user.l_name}}</h5>
+                           <p class="card-text">Member Since - {{user.user_since.strftime('%Y-%m-%d')}}</p>
+                           <p class="card-text">Role - {{user.role.name}}</p>
+                           {% if user.account_confirmed %}
+                              <div> Account has been confirmed</div>
+                           {% else %}
+                              <div> Account has not been confirmed</div>
+                           {% endif %}
+                        </div>
+                        <div class="card-footer bg-gold">
+                           <small class="text-muted">Last seen  {{ moment(user.last_visit).fromNow()}}</small>
+                        </div>
+                     </div>
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+{% endblock content %}

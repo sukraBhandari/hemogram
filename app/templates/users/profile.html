@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+	{{ pagedown.include_pagedown() }}
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+			<li class="breadcrumb-item active" aria-current="page">{{ current_user.user_first_name }} {{current_user.user_last_name}}</a></li>
+		</ol>
+	</nav>
+{% endblock content %}

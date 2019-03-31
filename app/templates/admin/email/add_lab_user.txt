@@ -1,0 +1,7 @@
+Dear {{user.user_first_name}} {{ user.user_last_name}},
+   Please confirm your account simply by visting following url
+   	{{ url_for('main.confirm', token=token, _external=True) }}
+   please use following temporary password {{temp_pass}}
+   You will be prompted to change your password after first login.
+Thank You.
+-Hemogram

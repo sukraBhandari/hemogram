@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_samples')}}">Samples</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Pending Samples</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Samples</h6>
+               
+            </div>
+            <div class="card-body">
+               <div class="table-responsive text-black">
+                  <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                        <tr>  <th></th>
+                        <th>Sample ID</th>
+                        <th>Patient ID</th>
+                        <th>Full Name</th>
+                        
+                        <th>Status</th>
+                        <th>Received At</th>
+                        <th>Completed At</th>
+                        <th>Clinic</th>
+                     </tr>
+                  </thead>
+                  <tfoot>
+                  <tr>
+                     <th></th>
+                     <th>Sample ID</th>
+                     <th>Patient ID</th>
+                     <th>Full Name</th>
+                     
+                     <th>Status</th>
+                     <th>Received At</th>
+                     <th>Completed At</th>
+                     <th>Clinic</th>
+                  </tr>
+                  </tfoot>
+                  <tbody>
+                     
+                  </tbody>
+               </table>
+            </div>
+            
+            
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="{{url_for('static', filename='Packages/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='Packages/datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script type="text/javascript">
+   $(document).ready(function() {
+      $('#dataTable').DataTable( {
+         "ajax": "{{url_for('lab.json_samples', status='pending')}}",
+         "order": [[5, "desc"]],
+         "columns": [
+            { className: 'text-center',
+               data: null, render: function ( data ) {
+                  // button options for users
+                  button_option =   '<a class="btn btn-sm btn-primary m-1" href="samples/'+data.id+'" class="editor_edit" title="View Sample Detail"><i class="fas fa-binoculars"></i> </a>'
+                  {% if current_user.can(Privilege.UPDATE) %}
+                     if (!data.status){
+                        button_option += '<a class="btn btn-sm btn-success m-1" href="samples/'+data.id+'/diff" class="editor_edit" title="Perform Diff"><i class="fas fa-microscope"></i> </a>'
+                     }
+                  {% endif %}
+               return button_option;
+               } },
+            { "data": "id" },
+            { "data": "patient_id" },
+            {"data": "full_name"},
+            { data: null, render:function(data){
+               return (data.status ? "<strong>Completed</strong>" : "<strong>In Progress</strong>");
+            } },
+            { data: null, render:function(data){
+               return moment(data.received_at).format('MMM Do YYYY HH:MM');
+            } },
+            { data: null, render:function(data){
+               return moment(data.completed_at).format('MMM Do YYYY HH:MM');
+            } },
+            {"data" : "clinic"}
+            ]
+      } );
+   } );
+</script>
+
+{% endblock %}

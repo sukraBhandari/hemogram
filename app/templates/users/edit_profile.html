@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('users.profile') }}">{{ current_user.user_first_name }} {{current_user.user_last_name}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">edit</li>
+      </ol>
+   </nav>
+   <div class="container">
+      {% include '_flash.html' %}
+      <!-- Outer Row -->
+      <div class="row justify-content-center">
+         <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+               <div class="card-body p-0">
+                  <!-- Nested Row within Card Body -->
+                  <div class="row">
+                     <div class="col-lg-6 bg-light">
+                        <div class="p-5">
+                           <div class="text-center">
+                              <img class="rounded-circle account-img" src="{{ image_file }}"><br/>
+                              <p class="mb-4">@{{ current_user.username }}</p><br/>
+                              <span>{{ current_user.f_name }} {{current_user.l_name}}</span><br/>
+                              <span>{{ current_user.email }}</span><br/>
+                              <span>{{ current_user.title }}</span><br/>
+                              <span>{{ current_user.user_since.strftime('%Y-%m-%d')}}</span><br/>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-6">
+                        <div class="p-5">
+                           <div class="text-center">
+                              <h1 class="h4 text-gray-900 mb-4">Update Profile!</h1>
+                              <p class="mb-4">Please update your username and profile picture here.</p>
+                              <hr>
+                           </div>
+                           <form method="POST" action="" enctype="multipart/form-data">
+                              {{ form.hidden_tag() }}
+                              <div class="form-group">
+                                 {{ form.username.label(class="form-control-label") }}
+                                 {% if form.username.errors %}
+                                    {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.username.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.username(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                              <div class="form-group">
+                                 {{ form.user_image.label() }}
+                                 {{ form.user_image(class="form-control-file") }}
+                                 {% if form.user_image.errors %}
+                                    {% for error in form.user_image.errors %}
+                                       <span class="text-danger">{{ error }}</span><br/>
+                                    {% endfor %}
+                                 {% endif %}
+                              </div>
+                              <div class="form-group mt-4">
+                                 {{ form.submit(class="btn btn-primary btn-user btn-block bg-purple") }}
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="card-footer text-center">
+                  <span class="text-muted">Please contact admin to change Email and/or Fullname.</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}

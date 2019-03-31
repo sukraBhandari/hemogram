@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      {% if title %}
+         <title>Hemogram- {{ title }}</title>
+      {% else %}
+         <title>Hemogram</title>
+      {% endif %}
+      <!-- Custom fonts for this template-->      
+      <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+      <!-- Custom styles for this template-->
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+      <link rel="stylesheet" type="text/css"  href="{{ url_for('static', filename='css/sb-admin-2.css') }}">        
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+   </head>
+   <body id="page-top">
+      <!-- Page Wrapper -->
+      <div id="wrapper">
+         <!-- Sidebar -->
+         <ul class="navbar-nav bg-purple sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('main.index') }}">
+               <div class="sidebar-brand-icon rotate-n-15">
+                  <i class="fas fa-microscope"></i>
+               </div>
+               <div class="sidebar-brand-text mx-3">hemogram</div>
+            </a>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            {% if current_user.is_authenticated and current_user.account_confirmed%}
+               <!-- Nav Item - Dashboard -->
+               <li class="nav-item active text-white">
+                  <a class="nav-link" href="{{ url_for('main.index') }}">
+                     <i class="fas fa-fw fa-tachometer-alt"></i>
+                     <span>Dashboard</span>
+                  </a>
+               </li>
+                <hr class="sidebar-divider">
+               <!-- Heading -->
+               <div class="sidebar-heading text-white">
+                  Reports
+               </div>
+                  <!-- Nav Item - Utilities Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="true" aria-controls="collapseOrders">
+                        <i class="fas fa-file-signature"></i>
+                        <span>Orders</span>
+                     </a>
+                     <div id="collapseOrders" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_orders') }}">All Orders</a>
+                           <a class="collapse-item" href="{{ url_for('lab.pending_orders') }}">Pending Orders</a>
+                        </div>
+                     </div>
+                  </li>
+                  <!-- Nav Item - Utilities Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSamples" aria-expanded="true" aria-controls="collapseSamples">
+                        <i class="fas fa-vial"></i>
+                        <span>Samples</span>
+                     </a>
+                     <div id="collapseSamples" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_samples') }}">All Samples</a>
+                           <a class="collapse-item" href="{{ url_for('lab.pending_samples') }}">Pending Samples</a>
+                        </div>
+                     </div>
+                  </li>
+                   <!-- Nav Item - Utilities Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePath" aria-expanded="true" aria-controls="collapsePath">
+                        <i class="fas fa-syringe"></i>
+                        <span>Path Review</span>
+                     </a>
+                     <div id="collapsePath" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_reviews') }}">All Reviews</a>
+                           <a class="collapse-item" href="{{ url_for('lab.pending_reviews') }}">Pending Reviews</a>
+                        </div>
+                     </div>
+                  </li>
+               <!-- Divider -->
+               <hr class="sidebar-divider">
+               <!-- Heading -->
+               <div class="sidebar-heading text-white">
+                  SETUP
+               </div>
+                  {% if current_user.is_administrator() %}
+                     <!-- Nav Item - Pages Collapse Menu -->
+                     <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClinic" aria-expanded="true" aria-controls="collapseClinic">
+                           <i class="fas fa-file-medical"></i>
+                           <span>Clinics</span>
+                        </a>
+                        <div id="collapseClinic" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                           <div class="bg-white py-2 collapse-inner rounded">
+                              <h6 class="collapse-header">Choose One:</h6>
+                              <a class="collapse-item" href="{{ url_for('lab.all_clinics') }}">All Clinics</a>
+                              <a class="collapse-item" href="{{ url_for('lab.add_clinic') }}">Add a Clinic</a>
+                           </div>
+                        </div>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProvider" aria-expanded="true" aria-controls="collapseProvider">
+                           <i class="fas fa-user-md"></i>
+                           <span>Provider</span>
+                        </a>
+                        <div id="collapseProvider" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                           <div class="bg-white py-2 collapse-inner rounded">
+                              <h6 class="collapse-header">Choose One:</h6>
+                              <a class="collapse-item" href="{{ url_for('lab.all_providers') }}">All Providers</a>
+                              <a class="collapse-item" href="{{ url_for('lab.add_provider') }}">Add a Provider</a>
+                           </div>
+                        </div>
+                     </li>
+                  {% endif%}
+                  <!-- Nav Item - Pages Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePatient" aria-expanded="true" aria-controls="collapsePatient">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Patients</span>
+                     </a>
+                     <div id="collapsePatient" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_patients') }}">All Patient</a>
+                           {% if current_user.can(Privilege.CREATE) %}
+                              <a class="collapse-item" href="{{ url_for('lab.add_patient') }}">Add a Patient</a>
+                           {% endif%}
+                        </div>
+                     </div>
+                  </li>
+
+                  <!-- Divider -->
+                  <hr class="sidebar-divider">
+                  <!-- Heading -->
+                  <div class="sidebar-heading text-white">
+                     Laboratory
+                  </div>
+                  <!-- Nav Item - Pages Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUsers" aria-expanded="true" aria-controls="collapseUsers">
+                        <i class="fas fa-users"></i>
+                        <span>Users</span>
+                     </a>
+                     <div id="collapseUsers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('users.all_users') }}">All Users</a>
+                           {% if current_user.is_administrator() %}
+                              <a class="collapse-item" href="{{ url_for('admin.register') }}">Add a User</a>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </li>
+                  <!-- Nav Item - Charts -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProcedures" aria-expanded="true" aria-controls="collapseProcedures">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Procedures</span>
+                     </a>
+                     <div id="collapseProcedures" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_procedures')}}">All Procedures</a>
+                           {% if current_user.can(Privilege.MODERATE) %}
+                              <a class="collapse-item" href="{{ url_for('lab.add_procedure') }}">Add a Procedure</a>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMorphology" aria-expanded="true" aria-controls="collapseProcedures">
+                        <i class="far fa-map"></i>
+                        <span>Morphology</span>
+                     </a>
+                     <div id="collapseMorphology" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_morphologies')}}">All Morphologies</a>
+                           {% if current_user.can(Privilege.MODERATE) %}
+                              <a class="collapse-item" href="{{ url_for('lab.add_morphology') }}">Add a Morphology</a>
+                           {% endif %}
+                        </div>
+                     </div>
+                  </li>
+                  
+                  <!-- Divider -->
+                  <hr class="sidebar-divider d-none d-md-block">
+                  <!-- Sidebar Toggler (Sidebar) -->
+                  <div class="text-center d-none d-md-inline">
+                     <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                  </div>
+               {% endif %}
+            </ul>
+            <!-- End of Sidebar -->
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+               <!-- Main Content -->
+               <div id="content">
+                  <!-- Topbar -->
+                  <nav class="navbar navbar-expand navbar-light bg-white topbar  static-top">
+                     {% if current_user.is_authenticated and current_user.account_confirmed%}
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                           <i class="fa fa-bars"></i>
+                        </button>
+                        <!-- Topbar Search -->
+                        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                           <div class="input-group">
+                              <input type="text" class="form-control bg-light border-0 small" placeholder="Search Patients" aria-label="Search" aria-describedby="basic-addon2">
+                              <div class="input-group-append">
+                                 <button class="btn btn-primary bg-purple" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                 </button>
+                              </div>
+                           </div>
+                        </form>
+                        <!-- Topbar Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                           <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                           <li class="nav-item dropdown no-arrow d-sm-none">
+                              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fas fa-search fa-fw"></i>
+                              </a>
+                              <!-- Dropdown - Messages -->
+                              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+                                 <form class="form-inline mr-auto w-100 navbar-search">
+                                    <div class="input-group">
+                                       <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                                       <div class="input-group-append">
+                                          <button class="btn btn-primary" type="button">
+                                          <i class="fas fa-search fa-sm"></i>
+                                          </button>
+                                       </div>
+                                    </div>
+                                 </form>
+                              </div>
+                           </li>
+                           <!-- Nav Item - Alerts -->
+                           {% with pending_slides = sample_pending_data() %}
+                           <li class="nav-item dropdown no-arrow mx-1">
+                              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fas fa-microscope fa-fw text-primary"></i>
+                                 <!-- Counter - Alerts -->
+                                 <span class="badge badge-danger badge-counter" id="pending_count" style="visibility: {% if pending_slides %}visible{% else %}hidden{% endif %};">{{ pending_slides }}</span>
+                              </a>
+                              <!-- Dropdown - Alerts -->
+                              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                 <h6 class="dropdown-header bg-purple">
+                                 Sample Alert
+                                 </h6>
+                                 <a class="dropdown-item d-flex align-items-center" href="{{ url_for('lab.pending_samples') }}">
+                                    <div class="mr-3">
+                                       <div class="icon-circle bg-primary">
+                                          <i class="fas fa-vials text-white"></i>
+                                       </div>
+                                    </div>
+                                    <div>
+                                       <div class="small text-gray-500">{{ moment().format('MMMM Do YYYY') }}</div>
+                                       {% if pending_slides %}
+                                          <span class="font-weight-bold" id="pending_count_two">Currenlty, {{ pending_slides }} slide  pending. </span>
+                                       {% else %}
+                                          <span class="font-weight-bold">No sample is pending.</span>
+                                       {% endif %}
+                                    </div>
+                                 </a>                                 
+                              </div>
+                           </li>
+                           {% endwith %}
+                           {% with pending_reviews = review_pending_data() %}
+                           <li class="nav-item dropdown no-arrow mx-1">
+                              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fas fa-user-md fa-fw text-primary"></i>
+                                 <!-- Counter - Alerts -->
+                                 <span class="badge badge-danger badge-counter" id="pending_path_count" style="visibility: {% if pending_reviews %}visible{% else %}hidden{% endif %};">{{ pending_reviews }}</span>
+                              </a>
+                              <!-- Dropdown - Alerts -->
+                              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                                 <h6 class="dropdown-header bg-purple">
+                                 Sample Alert
+                                 </h6>
+                                 <a class="dropdown-item d-flex align-items-center" href="{{ url_for('lab.pending_reviews') }}">
+                                    <div class="mr-3">
+                                       <div class="icon-circle bg-primary">
+                                          <i class="fas fa-vials text-white"></i>
+                                       </div>
+                                    </div>
+                                    <div>
+                                       <div class="small text-gray-500">{{ moment().format('MMMM Do YYYY') }}</div>
+                                       {% if pending_reviews %}
+                                          <span class="font-weight-bold" id="pending_path_count_two">Currenlty, {{ pending_reviews }} path review pending. </span>
+                                       {% else %}
+                                          <span class="font-weight-bold">No sample is pending.</span>
+                                       {% endif %}
+                                    </div>
+                                 </a>                                 
+                              </div>
+                           </li>
+                           {%endwith%}
+                           <!-- Nav Item - Messages -->
+                           <li class="nav-item dropdown no-arrow mx-1">
+                              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="fas fa-envelope fa-fw text-primary"></i>
+                                 <!-- Counter - Messages -->
+                                 <span class="badge badge-danger badge-counter">1</span>
+                              </a>
+                              <!-- Dropdown - Messages -->
+                              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                                 <h6 class="dropdown-header bg-purple">
+                                 Message Center
+                                 </h6>
+                                 <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                       <img class="rounded-circle" src="{{url_for('static', filename='images/profile_img/default.jpg')}}" alt="">
+                                       <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                       <div class="text-truncate">No Implemented yet. TODO</div>
+                                       <div class="small text-gray-500">Hemogram</div>
+                                    </div>
+                                 </a>                                 
+                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
+                              </div>
+                           </li>
+                           <div class="topbar-divider d-none d-sm-block"></div>
+                           <!-- Nav Item - User Information -->
+                           <li class="nav-item dropdown no-arrow">
+                              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <span class="mr-2 d-none d-lg-inline text-gray-600 medium">{{current_user.user_first_name}} {{current_user.user_last_name}}</span>
+                                 <img class="img-profile rounded-circle" src="{{url_for('static', filename='images/profile_img/' + current_user.profile_image)}}">
+                              </a>
+                              <!-- Dropdown - User Information -->
+                              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                 <a class="dropdown-item" href="{{ url_for('users.profile') }}">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                 </a>
+                                 <a class="dropdown-item" href="{{ url_for('users.edit_profile')}}">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Edit Profile
+                                 </a>
+                                 <a class="dropdown-item" href="{{ url_for('users.change_password')}}">
+                                    <i class="fas fa-unlock-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Change Password
+                                 </a>
+                                 <a class="dropdown-item" href="{{ url_for('users.contact')}}">
+                                    <i class="fas fa-envelope-open fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Contact Admin
+                                 </a>
+                                 <div class="dropdown-divider"></div>
+                                 <a class="dropdown-item" href="{{ url_for('main.logout')}}" data-toggle="modal" >
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                 </a>
+                              </div>
+                           </li>
+                        </ul>
+                     {% endif %}
+                  </nav>
+                  <!-- End of Topbar -->
+                  <!-- Begin Page Content -->
+                  <div class="container-fluid">
+                     {% block content %}{% endblock %}
+                  </div>
+               </div>
+               {% include '_footer.html' %}
+            </div>
+      </div>
+      <!-- Bootstrap core JavaScript-->
+      <script src="{{url_for('static', filename='Packages/jquery/jquery.min.js')}}"></script>
+      <script src="{{url_for('static', filename='Packages/bootstrap/js/bootstrap.bundle.min.js')}}"></script>    
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        
+      <!-- Custom scripts for all pages-->
+      <script src="{{url_for('static', filename='js/sb-admin-2.js')}}"></script>
+      <script>
+         function set_pending_count(n)
+         {
+            $('#pending_count').text(n[0]);
+            $('#pending_count').css('visibility', n[0] ? 'visible' : 'hidden');
+            $('#pending_count_two').text('Currenlty, '+n[0]+' slides are pending.');
+            $('#pending_path_count').text(n[1]);
+            $('#pending_path_count').css('visibility', n[1] ? 'visible' : 'hidden');
+            $('#pending_path_count_two').text('Currenlty, '+n[1]+' slides are pending.');
+         }
+         function set_pending_process(pending_id, progress)
+         {
+            $('#' + pending_id + '-progress').text(progress);
+         }
+         {% if current_user.is_authenticated %}
+            $(function(){
+               setInterval(function() {
+               $.ajax('{{url_for('lab.pending')}}').done(
+               function(notifications)
+               { for (var i = 0; i < notifications.length; i++) {
+               if (notifications[i].name == 'pending')
+               set_pending_count(notifications[i].data);
+               }
+               })
+               },100000);
+            });            
+            {%endif%}
+      </script>
+      {{ moment.include_moment() }}
+         
+      {% block script %}{% endblock %}
+   </body>
+</html>

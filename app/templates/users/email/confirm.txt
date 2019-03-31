@@ -1,0 +1,7 @@
+Dear {{user.user_first_name}} {{ user.user_last_name}},
+
+     Please use following link to confirm your account
+     {{ url_for('main.confirm', token=token, _external=True) }}
+
+Sincerely,
+-Hemogram

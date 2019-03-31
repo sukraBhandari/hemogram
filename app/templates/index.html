@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <div class="row">
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+         <div class="card border-left-primary h-100 py-2">
+            <div class="card-body">
+               <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Patients Count</div>
+                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_patients}}</div>
+                  </div>
+                  <div class="col-auto">
+                     <i class="fas fa-users fa-2x text-primary"></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+         <div class="card border-left-success h-100 py-2">
+            <div class="card-body">
+               <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sample Count</div>
+                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_samples}}</div>
+                  </div>
+                  <div class="col-auto">
+                     <i class="fas fa-vials fa-2x text-success"></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Earnings (Monthly) Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+         <div class="card border-left-info h-100 py-2">
+            <div class="card-body">
+               <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                     <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Users</div>
+                     <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_users}}</div>
+                        </div>
+                        
+                     </div>
+                  </div>
+                  <div class="col-auto">
+                     <i class="fas fa-user-friends fa-2x text-info"></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Pending Requests Card Example -->
+      <div class="col-xl-3 col-md-6 mb-4">
+         <div class="card border-left-warning h-100 py-2">
+            <div class="card-body">
+               <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                     <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Clinics</div>
+                     <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_clinics}}</div>
+                  </div>
+                  <div class="col-auto">
+                     <i class="fas fa-hospital fa-2x text-warning"></i>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col my-2">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <div class="col-sm-5">
+                  <h4 class="card-title mb-0">Message</h4>
+                  <div class="small text-muted">{{ moment().format('MMMM Do YYYY') }}</div>
+               </div>
+               
+            </div>
+            <div class="card-body">
+               <div class="col">
+                  <div class="chart-wrapper" style="height:300px;margin-top:40px;">
+                     <h5 class="card-subtitle mb-2 text-muted">Thank You and Welcome</h5>
+                     <p class="card-text">Some quick example text to build on the card title and make up the
+                        bulk of the card's content.This is a wider card with supporting text below as a natural
+                        lead-in to additional content. This card has even longer content than the first to
+                        show that equal height action.
+                     </p>
+                  </div>
+               </div>
+            </div>
+            <div class="card-footer py-3 d-flex flex-row align-items-center justify-content-between">
+               <div class="row text-center">
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col my-2">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <div class="col-sm-5">
+                  <h4 class="card-title mb-0">TAT</h4>
+                  <div class="small text-muted">{{ moment().format('MMMM Do YYYY') }}</div>
+               </div>
+            </div>
+            <div class="card-body">
+               <div class="col">
+                  <div class="chart-wrapper" style="height:300px;margin-top:40px;">
+                     <h5 class="card-subtitle mb-2 text-muted">Till Date</h5>
+                  </div>
+               </div>
+            </div>
+            <div class="card-footer py-3 d-flex flex-row align-items-center justify-content-between ">
+               <div class="row text-center">
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content%}

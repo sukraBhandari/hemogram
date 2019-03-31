@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Admin</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('admin.all_users')}}">Users</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('admin.user_profile', id=current_user.id) }}">{{ current_user.user_first_name }} {{current_user.user_last_name}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">edit</li>
+      </ol>
+   </nav>
+   <div class="container">
+      {% include '_flash.html' %}
+      <!-- Outer Row -->
+      <div class="row justify-content-center">
+         <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+               <div class="card-header text-center">
+                  <span class="text-muted">Edit User Information.</span>
+               </div>
+               <div class="card-body p-0">
+                  <!-- Nested Row within Card Body -->
+                  <div class="row">
+                     <div class="col-lg-6 bg-light">
+                        <div class="p-5">
+                           <div class="text-center">
+                              <img class="rounded-circle account-img" src="{{ image_file }}"><br/>
+                              <p class="mb-4">@{{ user.username }}</p><br/>
+                              <span>{{ user.user_first_name }} {{user.user_last_name}}</span><br/>
+                              <span>{{ user.email }}</span><br/>
+                              <span>{{ user.title }}</span><br/>
+                              <span>{{ user.user_since.strftime('%Y-%m-%d')}}</span><br/>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-6">
+                        <div class="p-5">
+                           <div class="text-center">
+                              <h1 class="h4 text-gray-900 mb-4">Update Profile!</h1>
+                              <p class="mb-4">Please update your username and profile picture here.</p>
+                              <hr>
+                           </div>
+                           {% if current_user.email != admin_email  %}
+                              <fieldset disabled="disabled">
+                              {% else %}
+                                 <fieldset>
+                                    {%endif%}
+                                    <form method="POST" action="" >
+                                       {{ form.hidden_tag() }}
+                                       <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.username.label(class="form-control-label") }}
+                                                {% if form.username.errors %}
+                                                   {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.username.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.username(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.email.label(class="form-control-label") }}
+                                                {% if form.email.errors %}
+                                                   {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.email.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.email(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.f_name.label(class="form-control-label") }}
+                                                {% if form.f_name.errors %}
+                                                   {{ form.f_name(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.f_name.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.f_name(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.l_name.label(class="form-control-label") }}
+                                                {% if form.l_name.errors %}
+                                                   {{ form.l_name(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.l_name.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.l_name(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="form-row">
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.title.label(class="form-control-label") }}
+                                                {% if form.title.errors %}
+                                                   {{ form.title(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.title.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.title(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                          <div class="form-group col-md-6">
+                                             <div class="form-group">
+                                                {{ form.role.label(class="form-control-label") }}
+                                                {% if form.role.errors %}
+                                                   {{ form.role(class="form-control form-control-lg is-invalid") }}
+                                                   <div class="invalid-feedback">
+                                                      {% for error in form.role.errors %}
+                                                         <span>{{ error }}</span>
+                                                      {% endfor %}
+                                                   </div>
+                                                {% else %}
+                                                   {{ form.role(class="form-control form-control-lg selected") }}
+                                                {% endif %}
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="form-group mt-4">
+                                          {{ form.submit(class="btn btn-primary btn-user btn-block") }}
+                                       </div>
+                                    </form>
+                                 </fieldset>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="card-footer text-center">
+                        <small class="text-muted">Last seen  {{ moment(user.last_visit).fromNow()}}</small>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      {% endblock content %}

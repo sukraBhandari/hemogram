@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+   {{ pagedown.include_pagedown() }}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="#">Morphologies</a></li>         
+         <li class="breadcrumb-item active" aria-current="page">Add</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <div class="card ">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+         <h6 class="m-0 font-weight-bold">Cell Morphology</h6>
+         <div>                                        <!-- Button trigger modal -->
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong">
+               Help
+            </button>
+         </div>
+      </div>
+      <div class="card-body bg-light">
+         <form method="POST" action="">
+            {{ form.hidden_tag() }}            
+            <div class="form-row">
+               <div class="form-group col-md-3">
+                  {{ form.cell_type.label(class="form-control-label") }}
+                  {% if form.cell_type.errors %}
+                     {{ form.cell_type(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                        {% for error in form.cell_type.errors %}
+                           <span>{{ error }}</span>
+                        {% endfor %}
+                     </div>
+                  {% else %}
+                     {{ form.cell_type(class="form-control form-control-lg") }}
+                  {% endif %}
+               </div>
+               <div class="form-group col-md-6">
+                  {{ form.morphology.label(class="form-control-label") }}
+                  {% if form.morphology.errors %}
+                     {{ form.morphology(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                        {% for error in form.morphology.errors %}
+                           <span>{{ error }}</span>
+                        {% endfor %}
+                     </div>
+                  {% else %}
+                     {{ form.morphology(class="form-control form-control-lg") }}
+                  {% endif %}
+               </div>
+               <div class="form-group col-md-3">
+                  {{ form.options.label(class="form-control-label") }}
+                  {% if form.options.errors %}
+                     {{ form.options(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                        {% for error in form.options.errors %}
+                           <span>{{ error }}</span>
+                        {% endfor %}
+                     </div>
+                  {% else %}
+                     {{ form.options(class="form-control form-control-lg") }}
+                  {% endif %}
+               </div>
+            </div>
+            <div class="form-group row">
+               <div class="col-sm-10">
+                  {{ form.submit(class="btn btn-primary btn-user bg-purple") }}
+               </div>
+            </div>            
+         </form>
+      </div>
+   </div>
+{% endblock content %}

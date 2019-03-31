@@ -1,0 +1,7 @@
+Dear {{user.f_name}} {{ user.l_name}},
+
+    <div>To confirm your account please <a href="{{ url_for('users.confirm', token=token, _external=True) }}">click here</a>.</div>
+
+
+Sincerely,
+Lab

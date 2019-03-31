@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+   {{ pagedown.include_pagedown() }}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_procedures')}}">Procedures</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.procedure', id=procedure.id) }}">{{procedure.title}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">edit</li>
+      </ol>
+   </nav>
+   <div class="card ">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+         <h6 class="m-0 font-weight-bold">Standard Operating Procedure</h6>
+         <div>                                        <!-- Button trigger modal -->
+         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalLong">
+         Help
+         </button>
+      </div>
+   </div>
+   <div class="card-body bg-light">
+      <form method="POST" action="">
+         {{ form.hidden_tag() }}
+         <div class="row">
+            <div class="col-lg-6">
+               <div class="form-group">
+                  {{ form.title.label(class="form-control-label") }}
+                  {% if form.title.errors %}
+                     {{ form.title(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                           <span>{{ error }}</span>
+                        {% endfor %}
+                     </div>
+                  {% else %}
+                     {{ form.title(class="form-control form-control-lg") }}
+                  {% endif %}
+               </div>
+               <div class="form-group">
+                  {{ form.procedure_content.label(class="form-control-label") }}
+                  {{ form.procedure_content(only_input=True, class="form-control form-control-lg", rows="10") }}
+               </div>
+               <div class="col-lg-6">
+                  <div class="p-5">
+                     {{ form.submit(class="btn btn-primary btn-user btn-block bg-purple") }}
+                  </div>
+               </div>
+            </div>
+            <div class="col-lg-6">
+               <h6 class="mx-4 font-weight-bold text-primary text-center">Preview</h6>
+               <div class="p-1">
+                  <hr>
+                  {{ form.procedure_content(only_preview=True) }}
+               </div>
+            </div>
+         </div>
+      </form>
+   </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Markdown examples</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         <div class="modal-body">
+            <table class="table table-bordered">
+               <thead class="thead-light">
+                  <tr>
+                     <th>Element</th>
+                     <th>Markdown Syntax</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><a href="/basic-syntax/#headings">Heading</a></td>
+                     <td><code># H1<br>
+                        ## H2<br>
+                     ### H3</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#bold">Bold</a></td>
+                     <td><code>**bold text**</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#italic">Italic</a></td>
+                     <td><code>*italicized text*</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#blockquotes-1">Blockquote</a></td>
+                     <td><code>&gt; blockquote</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#ordered-lists">Ordered List</a></td>
+                     <td><code>
+                        1. First item<br>
+                        2. Second item<br>
+                        3. Third item<br>
+                     </code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#unordered-lists">Unordered List</a></td>
+                     <td>
+                        <code>
+                        - First item<br>
+                        - Second item<br>
+                        - Third item<br>
+                        </code>
+                     </td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#code">Code</a></td>
+                     <td><code>`code`</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#horizontal-rules">Horizontal Rule</a></td>
+                     <td><code>---</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#links">Link</a></td>
+                     <td><code>[title](https://www.example.com)</code></td>
+                  </tr>
+                  <tr>
+                     <td><a href="/basic-syntax/#images-1">Image</a></td>
+                     <td><code>![alt text](image.jpg)</code></td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         
+      </div>
+   </div>
+</div>
+{% endblock content %}

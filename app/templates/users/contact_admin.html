@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('users.profile') }}">{{ current_user.user_first_name }} {{current_user.user_last_name}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Contact Admin</li>
+      </ol>
+   </nav>
+   <div class="container">
+      {% include '_flash.html' %}
+      <!-- Outer Row -->
+      <div class="row justify-content-center">
+         <div class="col-xl-10 col-lg-12 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+               <div class="card-body p-0">
+                  <!-- Nested Row within Card Body -->
+                  <div class="row">
+                     <div class="col-lg-6 d-none d-lg-block bg-blood-cell"></div>
+                     <div class="col-lg-6">
+                        <div class="p-5">
+                           <div class="text-center">
+                              <h1 class="h4 text-gray-900 mb-4">Contact Admin!</h1>
+                              <p class="mb-4">Please enter your message!</p>
+                              <hr>
+                           </div>
+                           <form method="POST" action="" enctype="multipart/form-data">
+                              {{ form.hidden_tag() }}
+                              <div class="form-group">
+                                 {{ form.message.label(class="form-control-label") }}
+                                 {% if form.message.errors %}
+                                    {{ form.message(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                       {% for error in form.message.errors %}
+                                          <span>{{ error }}</span>
+                                       {% endfor %}
+                                    </div>
+                                 {% else %}
+                                    {{ form.message(class="form-control form-control-lg") }}
+                                 {% endif %}
+                              </div>
+                              <div class="form-group mt-4">
+                                 {{ form.submit(class="btn btn-primary btn-user btn-block bg-purple") }}
+                              </div>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}

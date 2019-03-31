@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_patients')}}">Patients</a></li>
+         <li class="breadcrumb-item">
+            <a href="{{ url_for('lab.patient', id=donor.id)}}">{{donor.pat_first_name}} {{donor.pat_last_name}}</a>
+         </li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.sample', id=sample.id)}}">Sample ID - {{sample.id}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Cell Images</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <div>
+                  <h6 class="m-0 font-weight-bold">{{donor.pat_first_name}} {{donor.pat_last_name}}</h6>
+                  <div class="small text-muted">
+                     <span>AGE: {{age}}</span> |  DOB: {{moment(donor.birth_date).format('MMM Do YYYY')}}
+                  </div>
+               </div>
+               <div>
+                  {% if current_user.can(Privilege.CREATE) %}
+                     <a class="btn btn-sm btn-primary" href="#" role="button"  title="Add new slide images">
+                        Add Another Smear
+                     </a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body text-center">               
+               <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="diff-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                     
+                        <fieldset class="box my-1">
+                           <legend>All Images</legend>
+                           {%for cell_image in smear.images%}
+                             
+                                 <div id='{{cell_image.id}}' name='box-cell'>
+                                    <img class="img-thumbnail-diff" src="{{url_for('static', filename='images/slide_images/'+ cell_image.img)}}" alt="">
+                                 </div>
+                              
+                           {% endfor %}
+                        </fieldset>
+                            
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+ 
+   {% endblock content %}

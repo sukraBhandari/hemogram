@@ -1,0 +1,645 @@
+
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.all_patients')}}">Patients</a></li>
+         <li class="breadcrumb-item">
+            <a href="{{ url_for('lab.patient', id=donor.id)}}">{{donor.pat_first_name}} {{donor.pat_last_name}}</a>
+         </li>
+         <li class="breadcrumb-item"><a href="{{ url_for('lab.sample', id=sample.id)}}">Sample ID - {{sample.id}}</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Diff</li>
+      </ol>
+   </nav>
+   {% include '_flash.html' %}
+   <style type="text/css">
+   .cell-morphology {
+   border: 1px solid #e0e0e0;
+   padding:15px;
+   }
+   </style>   
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <div>
+                  <h6 class="m-0 font-weight-bold">{{donor.pat_first_name}} {{donor.pat_last_name}}</h6>
+                  <div class="small text-muted">
+                     <span>AGE: {{donor.age()}}</span> |  DOB: {{moment(donor.birth_date,'DD/MM/YYYY').format('MMM-Do-YYYY')}}
+                  </div>
+               </div>
+               <div>
+                  {% if sample.status%}
+                     <a class="btn btn-sm btn-primary" href="#" role="button"  title="View only, no modificaiton allowed">
+                     <i class="fas fa-check"> Diff</i></a>
+                  {% endif %}
+                  {% if current_user.can(Privilege.CREATE) %}
+                     <a class="btn btn-sm btn-primary" href="#" role="button"  title="View CBC results">
+                        <i class="fas fa-vials"></i>
+                     </a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body text-center">
+               <nav>
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                     <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#diff-home" role="tab" aria-controls="nav-home" aria-selected="true">DIFF</a>
+                     <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#wbc-morph" role="tab" aria-controls="nav-profile" aria-selected="false">WBC</a>
+                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#final-review" role="tab" aria-controls="nav-contact" aria-selected="false">TECH REVIEW</a>
+                     {% if sample.pathrv%}
+                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#path-review" role="tab" aria-controls="nav-contact" aria-selected="false">PATH REVIEW</a>
+                     {% endif%}
+                  </div>
+               </nav>
+               {{pickle}}
+               <div class="tab-content" id="nav-tabContent">
+                  <div class="tab-pane fade show active" id="diff-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                     {%for i in range(classification | length)%}
+                        <fieldset class="box my-1" id="{{classification[i]}}">
+                           <legend>{{classification[i] | capitalize}}</legend>
+                           {%for cell_image in smear.images%}
+                              {% if cell_image.nucleated_cell_class == i%}
+                                 <div id='{{cell_image.id}}' name='box-cell' class='{{cell_image.wbc_class}}'>
+                                    <img class="img-thumbnail-diff" src="{{url_for('static', filename='images/slide_images/'+ cell_image.img)}}" alt="">
+                                 </div>
+                              {% endif %}
+                           {% endfor %}
+                        </fieldset>
+                     {% endfor %}               
+                  </div>
+                  <div class="tab-pane fade" id="wbc-morph" role="tabpanel" aria-labelledby="nav-profile-tab">
+                     <br>
+                     <div class="morph-box">
+                        {% for each_row in wbc | batch(2) %}
+                           <div class="row justify-content-md-center">
+                              {% for m in each_row %}
+                                 <div class="cell-morphology col-4 m-1 text-left">
+                                    <div class="custom-control custom-switch">                                    
+                                       <input type="checkbox" class="custom-control-input" id="customSwitch-{{m.id}}" {% if m.id in checked %}checked{% endif %} name="morph-name">
+                                       <label class="custom-control-label" for="customSwitch-{{m.id}}">{{m.morph_name}}</label>
+                                    </div>
+                                 </div>
+                              {% endfor %}
+                           </div>
+                        {% endfor %}
+                     </div>               
+                  </div>
+                  <div class="tab-pane fade" id="final-review" role="tabpanel" aria-labelledby="nav-contact-tab">
+                     <div class="container">
+                     <div class="row text-left">
+                        <div class="col-sm">
+                           <div>CBC -
+                              <div> WBC - {{sample.wbc}}  X 10<sup>3</sup> / uL </div>
+                              <div> RBC - {{sample.rbc}} X 10<sup>6</sup> / uL</div>
+                              <div> HGB - {{sample.hgb}} g / dL</div>
+                              <div> HCT - {{sample.hct}} %</div>
+                              <div> MCV - {{((sample.hct * 10)/sample.rbc)|round|int}} fL </div>
+                              <div> MCH - {{((sample.hgb * 10)/sample.rbc)|round}} pg</div>
+                              <div> MCHC - {{((sample.hgb * 100)/sample.hct)|round|int}} g/dL</div>
+                              <div> PLT - {{sample.plt}} X 10<sup>3</sup> / uL</div>
+                           </div>                        
+                        </div>
+                        <div class="col-sm">
+                           <div class="diff-abs">
+                              DIFF - Asbolute
+                           </div>
+                        </div>
+                        <div class="col-sm">
+                           <div class="diff-rel">
+                              DIFF - Relative
+                           </div>
+                        </div>
+                        <div class="col-sm">
+                           Morphology -
+                           <div class='review-morph'>
+                              
+                           </div>
+                        </div>
+                     </div>  
+                  </div> 
+                  {%if not sample.status%}
+                     <div class="form-group row text-right">
+                        <div class="col-sm-10">
+                           <button type="button" class="btn btn-primary bg-purple pull-right" data-toggle="modal" data-target="#validateModal">Validate</button>
+                        </div>
+                     </div>
+                     <div class="modal fade" id="validateModal" tabindex="-1" role="dialog" aria-labelledby="validateModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title" id="validateModalLabel">Do you want to validate DIFF?</h5>
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <div class="modal-footer">
+                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                 <form method="POST" action="">
+                                    {{ form.hidden_tag()}} 
+                                           {{ form.submit(class="btn btn-primary bg-purple pull-right") }}
+                                 </form>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  {% endif %}
+               </div> 
+               {% if sample.pathrv %}
+                  <div class="tab-pane fade" id="path-review" role="tabpanel" aria-labelledby="nav-contact-tab">
+                     <div class="row justify-content-center">
+                        <div class="text-left my-5">
+                           Review For - {{sample.path_reviews[0].review_for}}
+                        </div>
+                     </div>
+                     {% if pathrv %}                        
+                       <div class="row justify-content-center">                     
+                         <div class="col-6">  
+                           {% if not pathrv.status %}                     
+                              <div class="form-group text-left">
+                                 <label for="comment">Pathologist Review:</label>
+                                 <textarea class="form-control" rows="5" id="path-comment"></textarea>
+                              </div>
+                               <button type="button" class="btn btn-primary bg-purple btn-sm m-1" data-toggle="modal" id="path-validate" data-target="#pathModal">Validate Path Review</button>
+                           {% else %}
+                              <div>{{pathrv.review}}</div>
+                           {% endif %}
+                         </div>                  
+                       </div>  
+                    {% endif %}                
+                  </div>
+                  <div class="modal fade" id="pathModal" tabindex="-1" role="dialog" aria-labelledby="pathModalLabel" aria-hidden="true">
+                   <div class="modal-dialog modal-dialog-centered" role="document">
+                     <div class="modal-content">
+                       <div class="modal-header">                        
+                         <h6 class="modal-title" id="pathModalLabel">Confirm Following Report?</h6>              
+                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                         </button>
+                       </div>
+                       <div class="modal-body">
+                           <div id="confirm-comment" class="text-center text-info"></div>
+                       </div>
+                       <div class="modal-footer">
+                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                         <button id="path-review-final" type="button" class="btn btn-primary bg-purple">Confirm</button>                         
+                       </div>
+                     </div>
+                   </div>
+                 </div>  
+              {% endif %}            
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Comment for Pathologist.</h5>
+
+        <button type="button" class="close" data-dismiss="modal" name='close' aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">        
+            <textarea id="comment-for-path" class="form-control col-xs-12" required></textarea>                   
+      </div>
+      <h6 class='text-muted text-right mr-2'>Must click submit to confirm</h6>
+      <div class="modal-footer"> 
+
+         <button type="button" class="btn btn-secondary modal-dismiss" name="close" data-dismiss="modal">Close</button>       
+        <button type="button" class="btn btn-primary review-4" name="review-submit">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block script %} 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{url_for('static', filename='Packages/contextmenu/jquery.ui.position.min.js')}}"></script>
+<script src="{{url_for('static', filename='Packages/contextmenu/jquery.contextMenu.js')}}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='Packages/contextmenu/jquery.contextMenu.min.css')}}">  
+   <script type="text/javascript">
+      $(document).ready(function() {
+       
+         $("fieldset").each(function(){
+            var children_count = $(this).children("[name=box-cell]").length;
+            if (children_count == 0){
+               $(this).hide();
+            }
+         });
+
+         $('#nav-tab a[href="#final-review"]').click(function() {
+            $(".diff-abs").children().remove();
+            $(".diff-rel").children().remove();
+            $('.review-morph').children().remove();
+            //add morph to the review box
+             $.each($("input.custom-control-input:checked"), function(){
+               addDiv($(this).next());
+            });
+            var check = 0;
+            if ($('#unidentified').children("[name=box-cell]").length == 0){
+               //console.log($('#unidentified').children("[name=box-cell]").length)
+               cal_trial();
+            }
+            else
+            {
+               //console.log($('#unidentified').children("[name=box-cell]").length);
+               $(".diff-abs").append('<div class="text-danger">unidentified cells present, please finish diff</div>');
+               //$(':input[type="submit"]').prop('disabled', true);
+               check +=1;
+            }            
+            if ($('.review-morph').children().length == 0)
+            {
+               $('.review-morph').append('<div class="text-danger">No morph selected</div>');
+               //$(':input[type="submit"]').prop('disabled', true);
+               check +=1;
+            }
+            else
+            {
+               $(".review-morph").empty()
+               $.each($("input.custom-control-input:checked"), function(){
+                  addDiv($(this).next());
+               });
+            }
+            console.log("check =" + check)
+            if (check != 0){
+               $(':input[type="submit"]').prop('disabled', true);
+            }
+            else
+            {
+               $(':input[name="diff_value"]').val("tinkumaster");
+               $(':input[type="submit"]').prop('disabled', false);
+            }
+         });
+         
+         //calculate total cells counted for diff
+         function calculate_total(){
+            var exclusion = {{include | tojson }}
+            var total = 0;
+            $("fieldset").each(function(){
+               var cell_type = $(this).attr('id');
+               if(exclusion.includes(cell_type)){
+                  total += $(this).children("[name=box-cell]").length;
+               }
+            });
+         return total > 0 ? total : 1;
+         }
+         //another function
+         function calculateDiff(){
+            var total = calculate_total();
+            $("fieldset").each(function(){
+               var absent_cell = ['unidentified','smudge_cells']
+               var cell_class = $(this).attr('id');
+               var count = $(this).children("[name=box-cell]").length
+               var factor = 100/total;
+               var rel = (count*factor);
+               //console.log(cell_class +' count -' +count +' rel -' +rel + ' total -' + total)
+               if (!absent_cell.includes(cell_class)){
+                  var data = cell_class == 'nrbc' ? "{{sample.rbc}}" : "{{sample.wbc}}";
+                  $(".diff-abs").append('<div> '+ cell_class + '--' + ((rel/100)*data).toFixed(2) +'</div>');
+                  $(".diff-rel").append('<div> '+ cell_class + '--' + (rel).toFixed(0)+'%' +'</div>');
+               }
+            });
+         console.log(total)
+         }
+         //another function
+         function cal_trial(){
+            var cell_d = {{trial | tojson}};
+            var total = calculate_total();
+            //console.log(total)
+            $("fieldset").each(function(){
+               var cell_class = $(this).attr('id');
+               var count = $(this).children("[name=box-cell]").length
+               var display_on_report = cell_d[cell_class][1]
+               var data = "{{sample.wbc}}";
+               var factor = 100/total;
+               var rel = (count*factor);
+               if (display_on_report == 0){
+                  if (count > 0 && cell_d[cell_class][2]==1){
+                     $(".diff-abs").append('<div>* '+ cell_class + '--' + ((rel/100)*data).toFixed(2) +'</div>');
+                     $(".diff-rel").append('<div>* '+ cell_class + '--' + (rel).toFixed(2)+'%' +'</div>');
+                  }
+               }
+               else
+               {
+                  $(".diff-abs").append('<div> '+ cell_class + '--' + ((rel/100)*data).toFixed(2) +'</div>');
+                  $(".diff-rel").append('<div> '+ cell_class + '--' + (rel).toFixed(2)+'%' +'</div>');
+               }
+            });
+         }
+
+         //add div to morphology tab in final review
+         function addDiv(data){
+            var present = data.text() != '{{review}}' ? 'Present' : ''
+            $(".review-morph").append('<div>'+ data.text() +' ' + present +'</div>');
+         }
+         //Deactivate switcch and submit button if the results are already validated
+         {% if sample.status%}
+            
+               $(".morph-box .cell-morphology").each(function(){
+                 $("[name='morph-name']").prop('disabled',true);
+               });
+               $(':input[type="submit"]').prop('disabled', true);
+           
+         {% endif %}
+      });
+   </script>
+   {% if not sample.status %}
+      <script type="text/javascript">
+         $(document).ready(function() {   
+         // morphology switch with ajax call 
+        $("input.custom-control-input").on('change.bootstrapSwitch', function(e){
+               var mid =  $(this).attr('id');
+               var sid = '{{sample.id}}';
+               var call_boolean = false;
+               var label = r = ''
+               if($(this).is(':checked'))
+               {     
+                  var parent = this;                 
+                  label = $(parent).labels().text()
+                  var c = 'checked';
+                  var d = null                                          
+               }
+               else
+               {                          
+                  var c = 'unchecked';
+                  var d = null   
+                  call_boolean = true;            
+               }  
+               mid = mid.split('-')[1]       
+               if (label == '{{review}}' && c == 'checked'){
+                  $('#exampleModalCenter').modal('show');
+                  $(".review-4, .close, .modal-dismiss").unbind().click(function () {
+                        var current_button = $(this).attr('name')
+                        r = $('#comment-for-path').val()
+                        $('#exampleModalCenter').modal('hide');
+                        if (!(r == '' || r == null) && current_button == 'review-submit')
+                        {                       
+                           switchAjaxCall([sid, mid, c, d, r]);
+                        }
+                        else
+                        {
+                            $(parent).prop('checked', false);
+                        }
+                  });
+               }
+               else
+               {              
+                  switchAjaxCall([sid, mid, c, d, r]);
+               }
+
+            });   
+
+
+            /*
+            $("input.custom-control-input").on('change.bootstrapSwitch', function(e){
+                        if($(this).is(':checked'))
+               {               
+                  var mid = $(this).attr('id');
+                  var label = $(this).labels().text()
+                  var c = 'checked';
+                  var d = null
+                  if (label=='{{review}}'){
+                      $('#exampleModalCenter').modal('show');
+                  }
+               }
+               else
+               {
+                  var mid = $(this).attr('id');               
+                  var c = 'unchecked';
+                  var d = null
+               }
+               $(".review-morph").empty()
+               $.each($("input.custom-control-input:checked"), function(){
+                  addDiv($(this).next());
+               });
+               
+               mid = mid.split('-')[1]
+               var sid = '{{sample.id}}';
+               switchAjaxCall([sid, mid, c, d]);
+            });
+            */
+            //ajax call function
+            function switchAjaxCall(data){
+               $.ajax({
+                  url : "{{url_for('lab.sample_temp_morph')}}",
+                  type: 'GET',
+                  cache: false,
+                  data: {'s' : data[0], 'm' : data[1], 'c' : data[2], 'd' : data[3], 'r' : data[4]},
+                  dataType: 'text',
+                  'success':function(response){
+                     console.log(response)
+                  }
+               });
+            }
+            //add div to morphology tab in final review
+            function addDiv(data){
+               var present = data.text() != '{{review}}' ? 'Present' : ''
+               $(".review-morph").append('<div>'+ data.text() +' ' + present +'</div>');
+            }
+         //each image is draggble element   
+            $('.box div').draggable({
+               revert: "invalid",
+               containment: "document",
+               helper: 'clone',
+               cursor: "move",
+               cancel: $(this)
+            });
+            $('.box').droppable({
+               tolerance: 'pointer',
+               drop: function(event,ui) {
+                  var original_box = $(ui.draggable).parent().attr('id') ;
+                  var id = $(ui.draggable).attr('id');
+                  var toy = $(ui.draggable).html();
+                  var box = $(this).attr('id');
+                  //console.log(original_box + ' draggable id ' + id + ' toy ' + toy + ' box ' + box);
+                  if (original_box != box){
+                     //console.log(original_box + ' moved to ' + box +' toy is'+ toy);
+                     $.ajax({
+                     url: "{{url_for('lab.sample_temp_diff')}}",
+                     type: 'GET',
+                     cache: false,
+                     data: {
+                     'id' : id,
+                     'box' : box },
+                     dataType: "text",
+                     'success': function() {
+                        $(ui.draggable).remove();
+                        $('#' + box).append('<div id="' + id + '" name=box-cell>' + toy + '</div>');
+                        $('div#' + id).draggable({
+                        revert: "invalid",
+                        containment: "document",
+                        helper: 'clone',
+                        cursor: "move"
+
+                        });
+                        $(this).css('min-height' , 'auto');
+                        var current_parent=$('#'+original_box);
+                        var future_parent = $('#'+box);
+                        parent_visibility(current_parent, future_parent);
+                        }
+                     });
+                  }
+               }
+            });
+
+            //visibility function 
+            function parent_visibility(current_parent, future_parent){
+               if (current_parent.children().length ==1 && current_parent.is(":visible")){
+                              current_parent.hide();
+               }
+               if (future_parent.is(":hidden")){
+                              future_parent.show();
+               }
+
+            }
+            //contextMenu for each blood cell images
+            $(function() {
+            $.contextMenu({
+               selector: '[name="box-cell"]',
+               callback: function(key, options) {
+                  var current_object = $(this)
+                  var original_box = $(this).parent().attr('id') ;
+                  var id = $(this).attr('id');
+                  var toy = $(this).html();
+                  var box = key;
+                  //console.log(original_box + ' draggable id ' + id + ' toy ' + toy + ' box ' + box);
+                  if (original_box != box){
+
+                     //console.log(original_box + ' moved to ' + box +' toy is'+ toy);
+                     $.ajax({
+                        url: "{{url_for('lab.sample_temp_diff')}}",
+                        type: 'GET',
+                        cache: false,
+                        data: {
+                        'id' : id,
+                        'box' : box },
+                        dataType: "text",
+                        'success': function() {
+                           current_object.remove();
+                           $('#' + box).append('<div id="' + id + '" name=box-cell>' + toy + '</div>');
+                           $('div#' + id).draggable({
+                              revert: "invalid",
+                              containment: "document",
+                              helper: 'clone',
+                              cursor: "move"
+                           });
+                           var current_parent=$('#'+original_box);
+                           var future_parent = $('#'+box);
+                           parent_visibility(current_parent, future_parent);
+                        }
+                     });
+                  }
+               },
+               items: {
+                  "neutrophils": {name: "Neutrophil", icon: "edit", id:'1'},
+                  "eosinophils": {name: "Eosinophil", icon: "edit"},
+                  "basophils": {name: "Basophil", icon: "edit"},
+                  "lymphocytes": {name: "Lymphocyte", icon: "edit"},
+                  "monocytes": {name: "Monocyte", icon: "edit"},
+                  "immature_granulocytes": {name: "Immature Granulocytes", icon: "edit"},
+                  "blasts": {name: "Blasts", icon: "edit"},
+                  "unclassified": {name: "Unclassified", icon: "edit"},
+                  "nrbcs": {name: "nrbcs", icon: "edit"},
+                  "smudge_cells": {name: "Smudge Cell", icon: "edit"},
+                  "sep1": "---------",
+                  "No Selection": {name: "No Selection", icon: function(){
+                  return '[name="box-cell"]';
+                  }}
+               }
+            });
+            $('[name="box-cell"]').on('click', function(e){
+            console.log('clicked', this);
+            })
+         });
+
+
+         }); // end document ready
+      </script>
+   {% endif %}
+   {% if not sample.path_reviews.status %}
+      <script type="text/javascript">
+         $(document).ready(function() {
+            $("#path-validate").click(function(){
+               r = $('#path-comment').val()
+               $("#confirm-comment").empty().append(r);
+            }); 
+            $('#path-review-final').click(function(){ 
+               r = $('#path-comment').val()
+               if(r !== 'undefined' && r != ''){
+                  s = "{{sample.id}}"
+                  $.ajax({
+                  url : "{{url_for('lab.sample_temp_review')}}",
+                  type: 'GET',
+                  cache: false,
+                  data: {'s' : s, 'r' : r},
+                  dataType: 'text',
+                  'success':function(response){
+                      $('#pathModal').modal('hide');
+                     window.location.href = response;
+                  }
+               });
+               }
+               
+            });
+         });
+         
+      </script>
+   {% endif%}
+
+{% endblock %}
+<!--
+var id = $(this).attr('id');
+id = id.split('-')[1]
+var sm ={{sample.id}}
+if (id && sm){
+alert(id);
+$.ajax({
+url: "{{url_for('lab.sample_temp_morph')}}",
+type: 'GET',
+cache: false,
+data: {'s':sm,
+'m': id
+},
+dataType:"text",
+'success': function(){
+alert('hello');
+}
+});
+$("input.custom-control-input").on('change.bootstrapSwitch', function(e){
+if($(this).is(':checked'))
+{
+var id = $(this).attr('id');
+id = id.split('-')[1];
+s_id = {{sample.id}}
+c = 'checked'
+d = null
+switchAjaxCall([s_id, id, c, d]);
+}
+else
+{
+var id = $(this).attr('id');
+id = id.split('-')[1];
+data = [id, 'unchecked'];
+switchAjaxCall(data);
+}
+function switchAjaxCall(sample_data){
+$.ajax({
+url : "{{url_for('lab.sample_temp_morph')}}",
+type : 'GET',
+data : {'s' : sample_data[0],
+'m' : sample_data[1],
+'c' : sample_data[2],
+'d' : sample_data[3]},
+dataType : "text",
+'success': function(){
+alert('hello')
+}
+});
+}
+});
+-->

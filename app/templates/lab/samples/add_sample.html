@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block content %}
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+			<li class="breadcrumb-item"><a href="{{ url_for('lab.all_patients')}}">Patients</a></li>
+			<li class="breadcrumb-item">
+				<a href="{{ url_for('lab.patient', id=order.donor.id)}}">
+					{{order.donor.pat_first_name}} {{order.donor.pat_last_name}}
+				</a>
+			</li>
+			<li class="breadcrumb-item active" aria-current="page">Sample Add</li>
+		</ol>
+	</nav>
+	{% include '_flash.html' %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+					<h6 class="m-0 font-weight-bold">Sample Data</h6>
+					<div>
+						{% if current_user.can(Privilege.CREATE) %}
+							<a class="btn btn-sm btn-primary" href="{{ url_for('lab.edit_patient', id=order.donor.id) }}" role="button"  title="Edit">
+								<i class="far fa-edit"></i>
+							</a>
+						{% endif %}
+					</div>
+				</div>
+				<div class="card-body text-center">
+					<form method="POST" enctype="multipart/form-data" action="" >
+						{{ form.hidden_tag() }}
+						<div class="form-row justify-content-center">
+							<div class="form-group col-md-3 text-left">
+								{{ form.wbc.label(class="form-control-label") }}
+								<div class="input-group mb-3">
+									{% if form.wbc.errors %}
+										{{ form.wbc(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in form.wbc.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form.wbc(class="form-control form-control-lg") }}
+									{% endif %}
+									<div class="input-group-append">
+										<span class="input-group-text bg-gold" id="basic-addon2">10<sup>3</sup> / uL</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-md-3 text-left">
+								{{ form.rbc.label(class="form-control-label") }}
+								<div class="input-group mb-3">
+									{% if form.rbc.errors %}
+										{{ form.rbc(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in form.rbc.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form.rbc(class="form-control form-control-lg") }}
+									{% endif %}
+									<div class="input-group-append">
+										<span class="input-group-text bg-gold" id="basic-addon2">10<sup>6</sup> / uL</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+							<div class="form-group col-md-3 text-left">
+								{{ form.hgb.label(class="form-control-label") }}
+								<div class="input-group mb-3">
+									{% if form.hgb.errors %}
+										{{ form.hgb(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in form.hgb.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form.hgb(class="form-control form-control-lg") }}
+									{% endif %}
+									<div class="input-group-append">
+										<span class="input-group-text bg-gold" id="basic-addon2">g / dL</span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-md-3 text-left">
+								{{ form.hct.label(class="form-control-label") }}
+								<div class="input-group mb-3">
+									{% if form.hct.errors %}
+										{{ form.hct(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in form.hct.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form.hct(class="form-control form-control-lg") }}
+									{% endif %}
+									<div class="input-group-append">
+										<span class="input-group-text bg-gold" id="basic-addon2">%</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+							<div class="form-group col-md-3 text-left">
+								{{ form.plt.label(class="form-control-label") }}
+								<div class="input-group mb-3">
+									{% if form.plt.errors %}
+										{{ form.plt(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in form.plt.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ form.plt(class="form-control form-control-lg") }}
+									{% endif %}
+									<div class="input-group-append">
+										<span class="input-group-text bg-gold" id="basic-addon2">10<sup>3</sup> / uL</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+							<div class="form-group col-md-3 text-left">
+								{{ form.instrument.label(class="form-control-label") }}
+								{% if form.instrument.errors %}
+									{{ form.instrument(class="form-control form-control-lg is-invalid") }}
+									<div class="invalid-feedback">
+										{% for error in form.instrument.errors %}
+											<span>{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ form.instrument(class="form-control form-control-lg selected") }}
+								{% endif %}
+							</div>
+							<div class="form-group col-md-3 text-left">
+								{{ form.images.label() }}
+								{{ form.images(class="form-control-file", multiple="multiple") }}
+								{% if form.images.errors %}
+									{% for error in form.images.errors %}
+										<span class="text-danger">{{ error }}</span></br>
+									{% endfor %}
+								{% endif %}
+							</div>
+						</div>
+						<div class="container">
+							<div class="row justify-content-around">
+								<div class="col-6">
+									{{ form.submit(class="btn btn-primary btn-user btn-block bg-purple") }}
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}

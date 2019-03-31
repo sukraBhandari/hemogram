@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Orders - {{find_order}}</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">{{ 'All Orders' if find_order=='all' else 'Orders without Sample'}}</h6>               
+            </div>
+            <div class="card-body">
+               <div class="table-responsive text-black">
+                  <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                        <tr>
+                           <th></th>
+                           <th>Order ID</th>
+                           <th>Patient Fullname</th>
+                           <th>Order Location</th>
+                           <th>Provider Fullname</th>
+                           <th>Order Received Date</th>
+                           <th>Order Name</th>
+                           <th>Fluid Type</th>
+                        </tr>
+                     </thead>
+                     <tfoot>
+                        <tr>
+                           <th></th>
+                           <th>Order ID</th>
+                           <th>Patient Fullname</th>
+                           <th>Order Location</th>
+                           <th>Provider Fullname</th>
+                           <th>Order Received Date</th>
+                           <th>Order Name</th>
+                           <th>Fluid Type</th>
+                        </tr>
+                     </tfoot>
+                     <tbody>
+                        
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}
+{% block script %}
+   <script src="{{url_for('static', filename='Packages/datatables/jquery.dataTables.min.js')}}"></script>
+   <script src="{{url_for('static', filename='Packages/datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $('#dataTable').DataTable( {        
+              "ajax": "{{url_for('lab.json_orders', status=find_order)}}",
+              "order": [[5, "desc"]],
+              "columns": [
+                  { className: 'text-center',
+                    data: null, render: function ( data ) {
+                      // button options for users
+                      if (!data.status){
+                        button_option =   '<a class="btn btn-sm btn-primary m-1" href="'+data.id+'/add_sample" class="editor_edit" title="Lab Report">Add Sample</a>'
+                      }
+                      else
+                      {
+                        button_option =   '<a class="btn btn-sm btn-primary m-1" href="/lab/samples/'+data.sample_id+'" class="editor_edit" title="Lab Report">View Sample</a>'
+                      }                     
+                          
+                      return button_option;
+                  } },
+                  { "data": "id" },
+                  { "data": "patient" },
+                  {"data": "order_loc"}, 
+                  { "data": "order_prov"},                  
+                  { data: null, render:function(data){
+                    return moment(data.events['CREATED']).format('MMM Do YYYY HH:mm');
+                  } },
+                  {"data" : "order_name"},
+                  {"data" : "sample_type"}
+              ]
+          } );
+      } );
+   </script>
+
+    
+{% endblock %} 

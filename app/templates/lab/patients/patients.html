@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+   
+   <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Dashboard</a></li>
+         <li class="breadcrumb-item active" aria-current="page">Patients</li>
+      </ol>
+   </nav>
+   <div class="row">
+      <div class="col-md-12">
+         <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+               <h6 class="m-0 font-weight-bold">Patients</h6>
+               <div>
+                  {% if current_user.can(Privilege.CREATE) %}
+                     <a class="btn btn-sm btn-primary" href="{{ url_for('lab.add_patient') }}" role="button"  title="Add Patient"><i class="fas fa-plus-square"></i></a>
+                  {% endif %}
+               </div>
+            </div>
+            <div class="card-body">
+               <div class="table-responsive text-black">
+                  <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+                     <thead>
+                        <tr>
+                           <th></th>
+                           <th>Patient ID</th>
+                           <th>Full Name</th>
+                           <th>DOB</th>
+                           <th>Age</th>
+                           <th>Gender</th>
+                           <th>Registration Date</th>
+                        </tr>
+                     </thead>
+                     <tfoot>
+                     <tr>
+                        <th></th>
+                        <th>Patient ID</th>
+                        <th>Full Name</th>
+                        <th>DOB</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Registration Date</th>
+                     </tr>
+                     </tfoot>
+                     <tbody>                        
+                     </tbody>
+                  </table>
+               </div>              
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock content %}
+{% block script %}
+   <script src="{{url_for('static', filename='Packages/datatables/jquery.dataTables.min.js')}}"></script>
+   <script src="{{url_for('static', filename='Packages/datatables/dataTables.bootstrap4.min.js')}}"></script>
+   <script type="text/javascript">   
+      $(document).ready(function() {
+         $('#dataTable').DataTable( {
+            ajax: "{{url_for('lab.json_patients')}}",
+            columns: [            
+               { className: 'text-center',
+                  data: null, render: function ( data ) {
+                  // button options for users
+                  button_option =   '<a class="btn btn-sm btn-primary m-1" href="patients/'+data.id+'" class="editor_edit" title="View Patient Detail"><i class="fa fa-eye"></i> </a>'
+                  {% if current_user.can(Privilege.CREATE) %}
+                     button_option += '<a class="btn btn-sm btn-success m-1" href="patients/'+data.id+'/add_order" class="editor_edit" title="Add New Order"><i class="fa fa-plus-circle"></i> </a>'
+                  {% endif %}
+                  return button_option;
+               } },
+               { data: "id" },
+               { data: "full_name" },
+               { data: null, render:function(data){
+                  return data.dob ;
+               } },
+               { data: "age" },
+               { data: null, render:function(data){
+                  return (data.gender);
+               } },
+               { data: null, render:function(data){
+                  return moment(data.registered).format('MMM Do YYYY');
+               } },              
+               ]
+            } );
+         });
+   </script>
+{% endblock %}
