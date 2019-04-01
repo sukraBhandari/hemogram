@@ -15,8 +15,8 @@ class Config:
     # smtp/email config
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
-    MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT'))
     MAIL_USE_TLS = True
 
     @staticmethod
