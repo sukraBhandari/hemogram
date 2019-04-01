@@ -30,8 +30,8 @@ def send_email(to, subject, template, **kwargs):
     email is background thread
     """
     app = current_app._get_current_object()
-    message = Message(app.config['MAIL_SUBJECT_HEMOGRAM'] + subject,
-                      sender=app.config['MAIL_SENDER_HEMOGRAM'],
+    message = Message(MAIL_SUBJECT + subject,
+                      sender=MAIL_SENDER,
                       recipients=[to])
     message.body = render_template(template + '.txt', **kwargs)
     message.html = render_template(template + '.html', **kwargs)

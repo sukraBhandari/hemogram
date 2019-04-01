@@ -18,6 +18,8 @@ class Config:
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT'))
     MAIL_USE_TLS = True
+    MAIL_SUBJECT = os.environ.get('MAIL_SUBJECT_HEMOGRAM')
+    MAIL_SENDER = os.environ.get('MAIL_SENDER_HEMOGRAM')
 
     @staticmethod
     def init_app(app):
