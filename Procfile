@@ -1,1 +1,1 @@
-web: python hemogram.py
+web: gunicorn hemogram:app
