@@ -36,3 +36,9 @@ def test():
     import unittest
     tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=3).run(tests)
+
+
+@app.cli.command()
+def deploy():
+    db.create_all()
+    Role.preset_roles()
