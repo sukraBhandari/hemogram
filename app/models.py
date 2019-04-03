@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
     # FK, establishes the relationship with 'roles' table
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-    # "many side" of 1-to-many relationship with 'LabProcedure' model
+    # 1 to many relationship
     procedures = db.relationship('LabProcedure', backref='author', lazy='dynamic')
     default_morphologies = db.relationship('Morphology', backref='author', lazy='dynamic')
     events = db.relationship('Event', backref='logger', lazy='dynamic')
@@ -225,7 +225,6 @@ class LabProcedure(db.Model):
     content_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     # FK, establish relationship with user table
-
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     @staticmethod
@@ -257,7 +256,6 @@ class Clinic(db.Model):
     clinic_full_name = db.Column(db.String(128))
     added_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     update_ts = db.Column(db.DateTime, default=datetime.utcnow)
-
     orders = db.relationship('Order', backref='ordering_location', lazy='dynamic')
 
     def __repr__(self):
@@ -279,7 +277,6 @@ class Provider(db.Model):
     update_ts = db.Column(db.DateTime(), default=datetime.utcnow)
     degree = db.Column(db.Enum(ProviderDegree, name="degree"))
     is_active = db.Column(db.Boolean, default=True)
-
     orders = db.relationship('Order', backref='ordering_provider', lazy='dynamic')
 
     def __repr__(self):
@@ -288,7 +285,7 @@ class Provider(db.Model):
 
 class Patient(db.Model):
     """
-    Create a table for Patient Demographic data    
+    Create a table for Patient Demographic data 
     """
     __tablename__ = 'patients'
     id = db.Column(db.Integer, primary_key=True)
@@ -299,11 +296,6 @@ class Patient(db.Model):
     gender = db.Column(db.Enum(Gender, name="gender"))
     registered_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     update_ts = db.Column(db.DateTime(), default=datetime.utcnow, index=True)
-    # "many side" of 1-to-many with 'Sample' model
-    # one patient can have many samples, but one sample
-    # can have only one patient
-    # to get all samples for a patient
-    # eg patient_1.samples -> will query all samples
     orders = db.relationship('Order', backref='donor', lazy='dynamic')
 
     def __repr__(self):
@@ -418,7 +410,7 @@ class Sample(db.Model):
     :plt: Platelet count taken from instrument
     :status: boolean to capture if testing is complete or in progress
     :diff_report: After all images are analyzed, results are stored as Binary Text
-    :pathrv: boolean to check if sample needs pathologists review   
+    :pathrv: boolean to check if sample needs pathologists review
     """
     __tablename__ = 'samples'
     id = db.Column(db.Integer, primary_key=True)
@@ -447,12 +439,10 @@ class Sample(db.Model):
 
     def to_json(self):
         """
-        Function to convert patient data in dictionary 
-        later to jsonify
+        Function to convert patient data in dictionary     
         """
         patient = self.order.donor
         provider = self.order.ordering_provider
-        # event = self.order.events
         e = self.order.events.all()
         events = {each.event_detail.name: each.event_ts for each in e}
         json_sample = {

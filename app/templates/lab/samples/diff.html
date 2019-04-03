@@ -224,14 +224,14 @@
 <link rel="stylesheet" href="{{url_for('static', filename='Packages/contextmenu/jquery.contextMenu.min.css')}}">  
    <script type="text/javascript">
       $(document).ready(function() {
-       
+         //hide all empty fieldsets
          $("fieldset").each(function(){
             var children_count = $(this).children("[name=box-cell]").length;
             if (children_count == 0){
                $(this).hide();
             }
          });
-
+        //fucntion for final-review of lab rpeort before validation
          $('#nav-tab a[href="#final-review"]').click(function() {
             $(".diff-abs").children().remove();
             $(".diff-rel").children().remove();
@@ -240,18 +240,21 @@
              $.each($("input.custom-control-input:checked"), function(){
                addDiv($(this).next());
             });
+             //variable to check if all actions are complete before validation of lab results
             var check = 0;
             if ($('#unidentified').children("[name=box-cell]").length == 0){
-               //console.log($('#unidentified').children("[name=box-cell]").length)
+               //if all cells have been classified, perform differential calculation
+               //function call
                cal_trial();
             }
             else
             {
-               //console.log($('#unidentified').children("[name=box-cell]").length);
+               //else append flag
                $(".diff-abs").append('<div class="text-danger">unidentified cells present, please finish diff</div>');
                //$(':input[type="submit"]').prop('disabled', true);
                check +=1;
-            }            
+            }   
+            //check if cell morphology is added         
             if ($('.review-morph').children().length == 0)
             {
                $('.review-morph').append('<div class="text-danger">No morph selected</div>');
@@ -265,13 +268,14 @@
                   addDiv($(this).next());
                });
             }
-            console.log("check =" + check)
+            //console.log("check =" + check)
+            //if check is 0, cells classification and morphology was added, 
+            //therefore ready to confirm lab results
             if (check != 0){
                $(':input[type="submit"]').prop('disabled', true);
             }
             else
-            {
-               $(':input[name="diff_value"]').val("tinkumaster");
+            {               
                $(':input[type="submit"]').prop('disabled', false);
             }
          });
@@ -394,35 +398,6 @@
 
             });   
 
-
-            /*
-            $("input.custom-control-input").on('change.bootstrapSwitch', function(e){
-                        if($(this).is(':checked'))
-               {               
-                  var mid = $(this).attr('id');
-                  var label = $(this).labels().text()
-                  var c = 'checked';
-                  var d = null
-                  if (label=='{{review}}'){
-                      $('#exampleModalCenter').modal('show');
-                  }
-               }
-               else
-               {
-                  var mid = $(this).attr('id');               
-                  var c = 'unchecked';
-                  var d = null
-               }
-               $(".review-morph").empty()
-               $.each($("input.custom-control-input:checked"), function(){
-                  addDiv($(this).next());
-               });
-               
-               mid = mid.split('-')[1]
-               var sid = '{{sample.id}}';
-               switchAjaxCall([sid, mid, c, d]);
-            });
-            */
             //ajax call function
             function switchAjaxCall(data){
                $.ajax({
@@ -434,6 +409,8 @@
                   'success':function(response){
                      console.log(response)
                   }
+                  //TODO if ajax fails//
+                  //on fail uncheck the switch button
                });
             }
             //add div to morphology tab in final review

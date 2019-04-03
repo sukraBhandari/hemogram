@@ -27,7 +27,7 @@ def send_async_email(app, message):
 def send_email(to, subject, template, **kwargs):
     """
     function to send email with predefined templates
-    email is background thread
+    email sent in background thread
     """
     app = current_app._get_current_object()
     message = Message(app.config['MAIL_SUBJECT'] + '-' + subject,
@@ -169,7 +169,7 @@ def define_roles():
 def save_image(picture, output_size=(350, 350), folder='slide_images'):
     """
     function to store images on the server
-    Blood cells images have default image sixe
+    Blood cells images have default image size of 350X350
     """
     random_hex = secrets.token_hex(8)
     _, file_ext = os.path.splitext(picture.filename)
@@ -246,10 +246,10 @@ def wbc_exclusion():
 
 def wbc_trial():
     """
-    function that return dictinary of WBC
-    dict is used by javascript
+    function that return dictinary of WBC.
+    This dict is used by javascript
     to display images and create WBC differential report
-    dynamically in the client side while classification
+    dynamically in the client side while Blood cell classification
     is in progress
     """
     # list = Display_drag_n_drop, always_display_on_report, display_if_present
@@ -266,7 +266,7 @@ def diff_pickle(wbc, diff):
     """
     function to generate WBC differential results as dictonary
     param: wbc
-    param: diff - list of tuples in following order (cell_index, cell_count)
+    param: diff - list of tuples - (cell_index, cell_count)
 
     """
     exclude = wbc_exclusion()
@@ -274,7 +274,7 @@ def diff_pickle(wbc, diff):
     always_report = list(range(1, 6))
     total = 0
     nrbcs = False
-    # calculate total number of WBC count
+    # calculate total number of WBC counted in the smear
     # which excludes NRBCs, SMUDGE CELLS
 
     for cell_index, count in diff:
@@ -285,9 +285,9 @@ def diff_pickle(wbc, diff):
             nrbcs_count = count
     # Five classes of WBC (neutrophils, lymphocytes, monocytes, eosinophils, basophils)
     # are always reported in lab result, even if the count is 0
-    # list of all cell present in diff
+    # first get list of all cell present in diff
     cells_already_present = [i[0] for i in diff]
-    # add cells to diff if cell not present in 'always_report'
+    # then add cells to diff if cell not present in 'always_report'
     diff.extend([(i, 0) for i in always_report if i not in cells_already_present])
 
     # create dict to hold diff report
@@ -318,8 +318,8 @@ def diff_pickle(wbc, diff):
 
 def smear_path_review():
     """
-    helper function when data is modified
-    in PathReview data model
+    helper function - that confirms that PATHOLGIST REVIEW hasn been order.
+    used during ajax call
     """
     return 'Smear to be reviewed by Pathologist'
 

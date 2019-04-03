@@ -18,50 +18,54 @@
                </div>
             </div>
             <div class="card-body">
-               <div class="card-columns">
-                  {% for user in users %}
-                     <div class="card">
-                        <div class="card-header bg-gold py-2 d-flex flex-row align-items-center justify-content-between">
-                           <h6 class="m-0 font-weight-bold text-primary">{{user.username}}</h6>
-                           <div class="dropdown no-arrow">
-                              <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                 <i class="fas fa-ellipsis-v fa-sm fa-fw "></i>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                                 <div class="dropdown-header">More</div>
-                                 <div class="dropdown-divider"></div>
-                                 <a class="dropdown-item" href="#">
-                                    <i class="fas fa-envelope fa-sm fa-fw mr-2 text-gray-400"></i>
-                                 Send Message</a>
-                                 {% if current_user.is_administrator() %}
-                                    <a class="dropdown-item " href="{{ url_for('admin.edit_user', id=user.id) }}">
-                                       <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Edit User</a>
-                                 {% endif %}
-                                 
+               <div class="container">
+                  <h5 class="section-title h1">OUR TEAM</h5>
+                  <div class="row">
+                     {% for user in users %}
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                           <div class="user-card mb-4">
+                              <div class="card">
+                                 <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">{{user.username}}</h6>
+                                    <div class="dropdown no-arrow">
+                                       <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fas fa-ellipsis-v fa-sm fa-fw "></i>
+                                       </a>
+                                       <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                          <div class="dropdown-header">More</div>
+                                          <div class="dropdown-divider"></div>
+                                          <a class="dropdown-item" href="#">
+                                             <i class="fas fa-envelope fa-sm fa-fw mr-2 text-gray-400"></i>
+                                          Send Message</a>
+                                          {% if current_user.is_administrator() %}
+                                             <a class="dropdown-item " href="{{ url_for('admin.edit_user', id=user.id) }}">
+                                                <i class="fas fa-edit fa-sm fa-fw mr-2 text-gray-400"></i>
+                                             Edit User</a>
+                                          {% endif %}                                 
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="card-body text-center">
+                                    <p style="float:none;">
+                                       <img class="rounded-circle account-img" src="{{url_for('static', filename='images/profile_img/'+ user.profile_image)}} "/>
+                                    </p>
+                                    <p class="card-text">Member Since - {{user.user_since.strftime('%Y-%m-%d')}}</p>
+                                    <p class="card-text">Role - {{user.role.name}}</p>
+                                    {% if user.account_confirmed %}
+                                       <div> Account has been confirmed</div>
+                                    {% else %}
+                                       <div> Account has not been confirmed</div>
+                                    {% endif %}
+                                 </div>
+                                 <div class="card-footer">
+                                     <small class="text-muted">Last seen  {{ moment(user.last_visit).fromNow()}}</small>
+                                 </div>
                               </div>
                            </div>
                         </div>
-                        
-                        <div class="card-body bg-grey text-center">
-                           <img class="rounded-circle account-img" src="{{url_for('static', filename='images/profile_img/'+ user.profile_image)}} "/>
-                           <h5 class="card-title">{{ user.f_name }} {{user.l_name}}</h5>
-                           <p class="card-text">Member Since - {{user.user_since.strftime('%Y-%m-%d')}}</p>
-                           <p class="card-text">Role - {{user.role.name}}</p>
-                           {% if user.account_confirmed %}
-                              <div> Account has been confirmed</div>
-                           {% else %}
-                              <div> Account has not been confirmed</div>
-                           {% endif %}
-                        </div>
-                        <div class="card-footer bg-gold">
-                           <small class="text-muted">Last seen  {{ moment(user.last_visit).fromNow()}}</small>
-                           
-                        </div>
-                     </div>
-                     
-                  {% endfor %}
-               </div>
+                     {% endfor %}
+                  </div>
+               </div>               
             </div>
          </div>
       </div>
