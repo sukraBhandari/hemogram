@@ -1,0 +1,30 @@
+#!/usr/bin/env ansible-playbook -i hosts
+
+- hosts: local
+  become: no
+
+  vars:
+    STACK_NAME: "hemogram"
+    CLOUDFORMATION_PARAMS:
+      BucketName: "hemogram-data"
+      PolicyName: "HemogramPolicy"
+      UserName: "HemogramUser"
+
+  tasks:
+    - fail: msg="ansible version is {{ ansible_version['full'] }}, requires >= 2.7"
+      when: ansible_version['full'] is version('2.7', '<')
+      tags:
+        - always
+        - ansible-version
+
+    # "Outputs" are stored in stack_vars['stack_outputs']
+    - name: create s3 bucket and role for application data
+      cloudformation:
+        stack_name: "{{ STACK_NAME }}"
+        state: "present"
+        region: "us-west-2"
+        template: "s3-bucket-and-role.json"
+        template_parameters: "{{ CLOUDFORMATION_PARAMS }}"
+      register: stack_vars
+      tags:
+        - s3
