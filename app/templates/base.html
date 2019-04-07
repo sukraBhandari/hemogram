@@ -41,22 +41,8 @@
                 <hr class="sidebar-divider">
                <!-- Heading -->
                <div class="sidebar-heading text-white">
-                  Reports
+                  Results
                </div>
-                  <!-- Nav Item - Utilities Collapse Menu -->
-                  <li class="nav-item">
-                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="true" aria-controls="collapseOrders">
-                        <i class="fas fa-file-signature"></i>
-                        <span>Orders</span>
-                     </a>
-                     <div id="collapseOrders" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                           <h6 class="collapse-header">Choose One:</h6>
-                           <a class="collapse-item" href="{{ url_for('lab.all_orders') }}">All Orders</a>
-                           <a class="collapse-item" href="{{ url_for('lab.pending_orders') }}">Pending Orders</a>
-                        </div>
-                     </div>
-                  </li>
                   <!-- Nav Item - Utilities Collapse Menu -->
                   <li class="nav-item">
                      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSamples" aria-expanded="true" aria-controls="collapseSamples">
@@ -85,6 +71,41 @@
                         </div>
                      </div>
                   </li>
+                  <hr class="sidebar-divider">
+               <!-- Heading -->
+               <div class="sidebar-heading text-white">
+                  Reports
+               </div>
+                  <!-- Nav Item - Utilities Collapse Menu -->
+                  <!-- Nav Item - Pages Collapse Menu -->
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePatient" aria-expanded="true" aria-controls="collapsePatient">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Patients</span>
+                     </a>
+                     <div id="collapsePatient" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_patients') }}">All Patient</a>
+                           {% if current_user.can(Privilege.CREATE) %}
+                              <a class="collapse-item" href="{{ url_for('lab.add_patient') }}">Add a Patient</a>
+                           {% endif%}
+                        </div>
+                     </div>
+                  </li>       
+                  <li class="nav-item">
+                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOrders" aria-expanded="true" aria-controls="collapseOrders">
+                        <i class="fas fa-file-signature"></i>
+                        <span>Orders</span>
+                     </a>
+                     <div id="collapseOrders" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                           <h6 class="collapse-header">Choose One:</h6>
+                           <a class="collapse-item" href="{{ url_for('lab.all_orders') }}">All Orders</a>
+                           <a class="collapse-item" href="{{ url_for('lab.pending_orders') }}">Pending Orders</a>
+                        </div>
+                     </div>
+                  </li>                         
                <!-- Divider -->
                <hr class="sidebar-divider">
                <!-- Heading -->

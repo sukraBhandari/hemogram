@@ -36,7 +36,7 @@
                            <div class="card-body">
                               <div class="row justify-content-center">
                                  <div class="col mr-2">
-                                    <h6 class="text-muted">{{pt}}</h6>                                   
+                                    <h6 class="text-muted">{{patients | length}}</h6>                                   
                                  </div>                                
                               </div>
                            </div>
@@ -64,15 +64,15 @@
                               <th class="text-center">
                                  <i class="fas fa-hashtag"></i>
                               </th>
-                              <th>Order ID</th>
+                              <th>Patient ID</th>
                               <th class="text-center">Patient Full Name</th>
-                              <th>Order Date</th>                              
-                              <th>Last Update</th>
-                              <th>Action</th>
+                              <th>Age</th>                              
+                              <th>Birth Date</th>
+                              <th>View Detail</th>
                            </tr>
                         </thead>
                         <tbody>
-                           {% for each_order in clinic.orders %}
+                           {% for patient in patients %}
                               <tr>
                                  <td class="text-center">
                                     <div>
@@ -80,23 +80,15 @@
                                     </div>
                                  </td>
                                  <td>
-                                    <div>{{each_order.id}}</div>
+                                    <div>{{patient.id}}</div>
                                  </td>
                                  <td class="text-center">
-                                    <div><strong>{{each_order.donor.pat_first_name}} {{each_order.donor.pat_middle_name}} {{each_order.donor.pat_last_name}}</strong></div>
+                                    <div><strong>{{patient.pat_first_name}} {{patient.pat_middle_name}} {{patient.pat_last_name}}</strong></div>
                                  </td>
-                                 {% with e = each_order.events.all() %}
-                                    <td>
-                                       <div>{{e[0].event_detail.name}}</div>
-                                       <div class="small text-muted">{{moment(e[0].event_ts,'DD/MM/YYYY').format('MMM-Do-YYYY')}}</div>
-                                    </td>
-                                    <td>
-                                       <div>{{e[-1].event_detail.name}}</div>
-                                       <div class="small text-muted">{{moment(e[-1].event_ts,'DD/MM/YYYY').format('MMM-Do-YYYY')}}</div>
-                                    </td>
-                                 {% endwith %}
+                                 <td>{{patient.age()}}</td>
+                                 <td>{{moment(patient.birth_date,'DD/MM/YYYY').format('MMM-Do-YYYY')}}</td>
                                  <td>
-                                    <a class="btn btn-sm btn-primary" href="{{url_for('lab.sample', id=each_order.id)}}" role="button"  title="View">
+                                    <a class="btn btn-sm btn-primary" href="{{url_for('lab.patient', id=patient.id)}}" role="button"  title="View">
                                        <i class="fas fa-eye"></i>
                                     </a>
                                  </td>

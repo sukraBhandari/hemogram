@@ -21,6 +21,13 @@ class Config:
     MAIL_SUBJECT = os.environ.get('MAIL_SUBJECT_HEMOGRAM')
     MAIL_SENDER = os.environ.get('MAIL_SENDER_HEMOGRAM')
 
+    # files storage config
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY_ID = os.environ.get('AWS_SECRET_ACCESS_KEY_ID')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_FILE_OVERWRITE = False
+    AWS_DEFAULT_ACL = None
+
     @staticmethod
     def init_app(app):
         pass

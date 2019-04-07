@@ -114,8 +114,8 @@ def clinic(id):
     """
     clinic = Clinic.query.get_or_404(id)
     # Better way to do following #
-    pt_count = len(set([each.patient_id for each in clinic.orders]))
-    return render_template('lab/clinics/clinic.html', clinic=clinic, pt=pt_count)
+    patients = db.session.query(Patient).join(Order, Clinic).filter(Clinic.id == clinic.id).distinct(Patient.id).all()
+    return render_template('lab/clinics/clinic.html', clinic=clinic, patients=patients)
 
 
 @lab.route('/clinics/<int:id>/edit', methods=['GET', 'POST'])
@@ -518,7 +518,7 @@ def sample_temp_review():
         pathrv.review = bleach.clean(r, strip=True)
         pathrv.status = True
         database.update(pathrv)
-        database.create(Event(order_id=sample.order.id, user_id=current_user.id, event_detail=OrderEventType.PATH_REVIEWED))
+        database.create(Event(order_id=pathrv.smear.order.id, user_id=current_user.id, event_detail=OrderEventType.PATH_REVIEWED))
         return url_for('lab.sample', id=pathrv.sample_id)
     return 'fail'
 

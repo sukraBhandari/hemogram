@@ -285,7 +285,7 @@ class Provider(db.Model):
 
 class Patient(db.Model):
     """
-    Create a table for Patient Demographic data 
+    Create a table for Patient Demographic data
     """
     __tablename__ = 'patients'
     id = db.Column(db.Integer, primary_key=True)
@@ -301,6 +301,12 @@ class Patient(db.Model):
     def __repr__(self):
         return "Patient : {} {}".format(self.pat_first_name, self.pat_last_name)
 
+    def get_patient_fullname(self):
+        """
+        function to get patient full name
+        """
+        return self.pat_first_name + " " + self.pat_middle_name + " " + self.pat_last_name
+
     def age(self):
         """
         function to get patient age from birth_date
@@ -314,7 +320,7 @@ class Patient(db.Model):
         """
         json_patient = {
             'id': self.id,
-            'full_name': self.pat_first_name + " " + self.pat_middle_name + " " + self.pat_last_name,
+            'full_name': self.get_patient_fullname(),
             'dob': self.birth_date.strftime("%A %d. %B %Y"),
             'age': self.age(),
             'gender': self.gender.name,
@@ -360,7 +366,7 @@ class Order(db.Model):
             sample_id = self.samples[0].id
         json_order = {
             'id': self.id,
-            'patient': patient.pat_first_name + " " + patient.pat_middle_name + " " + patient.pat_last_name,
+            'patient': patient.get_patient_fullname(),
             'sample_type': self.order_fluid_type.value,
             'order_name': self.order_name.name,
             'events': events,
@@ -439,7 +445,7 @@ class Sample(db.Model):
 
     def to_json(self):
         """
-        Function to convert patient data in dictionary     
+        Function to convert patient data in dictionary
         """
         patient = self.order.donor
         provider = self.order.ordering_provider
@@ -447,7 +453,7 @@ class Sample(db.Model):
         events = {each.event_detail.name: each.event_ts for each in e}
         json_sample = {
             'id': self.id,
-            'patient': patient.pat_first_name + " " + patient.pat_middle_name + " " + patient.pat_last_name,
+            'patient': patient.get_patient_fullname(),
             'status': self.status,
             'provider': provider.pro_first_name + " " + provider.pro_last_name + ", " + provider.degree.value,
             'clinic': self.order.ordering_location.clinic_code_name,
