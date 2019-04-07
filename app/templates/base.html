@@ -141,23 +141,6 @@
                         </div>
                      </li>
                   {% endif%}
-                  <!-- Nav Item - Pages Collapse Menu -->
-                  <li class="nav-item">
-                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePatient" aria-expanded="true" aria-controls="collapsePatient">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Patients</span>
-                     </a>
-                     <div id="collapsePatient" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                           <h6 class="collapse-header">Choose One:</h6>
-                           <a class="collapse-item" href="{{ url_for('lab.all_patients') }}">All Patient</a>
-                           {% if current_user.can(Privilege.CREATE) %}
-                              <a class="collapse-item" href="{{ url_for('lab.add_patient') }}">Add a Patient</a>
-                           {% endif%}
-                        </div>
-                     </div>
-                  </li>
-
                   <!-- Divider -->
                   <hr class="sidebar-divider">
                   <!-- Heading -->
