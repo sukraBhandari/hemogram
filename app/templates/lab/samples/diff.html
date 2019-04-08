@@ -62,7 +62,7 @@
                            {%for cell_image in smear.images%}
                               {% if cell_image.nucleated_cell_class == i%}
                                  <div id='{{cell_image.id}}' name='box-cell' class='{{cell_image.wbc_class}}'>
-                                    <img class="img-thumbnail-diff" src="{{url_for('static', filename='images/slide_images/'+ cell_image.img)}}" alt="">
+                                    <img class="img-thumbnail-diff" src="{{config.S3_LOCATION}}/{{cell_image.img}}" alt="">
                                  </div>
                               {% endif %}
                            {% endfor %}

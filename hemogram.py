@@ -1,11 +1,11 @@
 import os
-# from flask_migrate import Migrate
+from flask_migrate import Migrate
 from app import create_app, db
 from app.models import User, Role, Privilege, LabProcedure, Patient, Clinic,\
     Order, Event, Sample, Smear, CellImage, Comment, PathReview, Morphology,\
     BloodMorphology, Provider
 app = create_app(os.environ.get('LAB_CONFIG'))
-# migrate = Migrate(app, db)
+migrate = Migrate(app, db)
 
 
 @app.shell_context_processor

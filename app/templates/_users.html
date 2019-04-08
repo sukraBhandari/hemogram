@@ -27,7 +27,7 @@
                   </div>
                   <div class="card-body text-center">
                      <p style="float:none;">
-                        <img class="rounded-circle account-img" src="{{url_for('static', filename='images/profile_img/'+ user.profile_image)}} "/>
+                        <img class="rounded-circle account-img" src="{{config.S3_LOCATION}}/{{user.profile_image}}"/>
                      </p>
                      <p class="card-text">Member Since - {{user.user_since.strftime('%Y-%m-%d')}}</p>
                      <p class="card-text">Role - {{user.role.name}}</p>

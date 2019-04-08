@@ -10,7 +10,8 @@ from .. import db, database
 from ..models import LabProcedure, Patient, Clinic, Order, CellImage, Morphology, BloodMorphology,\
     PathReview, Event, Sample, Provider, Smear
 from ..utils import Privilege, privilege_required, admin_required, save_image, wbc_classification,\
-    wbc_trial, smear_path_review, ResultOption, OrderEventType, wbc_exclusion, diff_pickle
+    wbc_trial, smear_path_review, ResultOption, OrderEventType, wbc_exclusion, diff_pickle, \
+    upload_file_to_s3
 
 # add procedure
 
@@ -369,7 +370,7 @@ def add_sample(id):
         if form.images.data:
             pay_load = []
             for image in request.files.getlist('images'):
-                wbc_file = save_image(image)
+                wbc_file = upload_file_to_s3(image)
                 pay_load.append(CellImage(smear_id=smear.id, img=wbc_file))
             pay_load.append(Event(order_id=order.id, user_id=current_user.id, event_detail=OrderEventType.RECEIVED_SMEAR))
             database.create_all(pay_load)

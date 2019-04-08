@@ -39,7 +39,7 @@
                            {%for cell_image in smear.images%}
                              
                                  <div id='{{cell_image.id}}' name='box-cell'>
-                                    <img class="img-thumbnail-diff" src="{{url_for('static', filename='images/slide_images/'+ cell_image.img)}}" alt="">
+                                    <img class="img-thumbnail-diff" src="{{config.S3_LOCATION}}/{{cell_image.img}}" alt="">
                                  </div>
                               
                            {% endfor %}

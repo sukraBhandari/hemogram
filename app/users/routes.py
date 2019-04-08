@@ -6,7 +6,7 @@ from .forms import EditProfileForm, ChangePasswordForm, ResetRequestForm, ResetP
     ContactAdminForm
 from .. import database
 from ..models import User
-from ..utils import send_email, save_image
+from ..utils import send_email, save_image, upload_file_to_s3
 
 
 @users.route('/edit_profile', methods=['GET', 'POST'])
@@ -20,7 +20,7 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.username = form.username.data
         if form.user_image.data:
-            image_file = save_image(form.user_image.data, (125, 125), "profile_img")
+            image_file = upload_file_to_s3(form.user_image.data, "profile_images")
             current_user.profile_image = image_file
         # db.session.add(current_user._get_current_object())
         # db.session.commit()

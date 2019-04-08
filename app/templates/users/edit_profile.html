@@ -19,7 +19,7 @@
                      <div class="col-lg-6 bg-light">
                         <div class="p-5">
                            <div class="text-center">
-                              <img class="rounded-circle account-img" src="{{ image_file }}"><br/>
+                              <img class="rounded-circle account-img" src="{{config.S3_LOCATION}}/{{current_user.profile_image}}"><br/>
                               <p class="mb-4">@{{ current_user.username }}</p><br/>
                               <span>{{ current_user.f_name }} {{current_user.l_name}}</span><br/>
                               <span>{{ current_user.email }}</span><br/>

@@ -212,6 +212,7 @@ def upload_file_to_s3(file, folder="slide_images", acl="public-read"):
     """
     function to upload a file to aws bucket
     """
+    # TODO image resizeing
     s3 = get_s3()
     bucket_name = get_bucket_name()
     random_hex = secrets.token_hex(8)
