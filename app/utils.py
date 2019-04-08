@@ -24,12 +24,19 @@ def send_async_email(app, message):
         mail.send(message)
 
 
+def get_app():
+    """
+    function to get current app_object
+    """
+    return current_app._get_current_object()
+
+
 def send_email(to, subject, template, **kwargs):
     """
     function to send email with predefined templates
     email sent in background thread
     """
-    app = current_app._get_current_object()
+    app = get_app()
     message = Message(app.config['MAIL_SUBJECT'] + '-' + subject,
                       sender=app.config['MAIL_SENDER'],
                       recipients=[to])
@@ -181,6 +188,64 @@ def save_image(picture, output_size=(350, 350), folder='slide_images'):
     pic.thumbnail(output_size)
     pic.save(picture_path)
     return file_name
+
+
+def get_s3():
+    """
+    get aws s3 object
+    """
+    app = get_app()
+    s3 = boto3.client('s3', aws_access_key_id=app.config['AWS_ACCESS_KEY_ID'],
+                      aws_secret_access_key=app.config['AWS_SECRET_ACCESS_KEY'])
+    return s3
+
+
+def get_bucket_name():
+    """
+    get aws bucket name
+    """
+    app = get_app()
+    return app.config['AWS_STORAGE_BUCKET_NAME']
+
+
+def upload_file_to_s3(file, folder="slide_images", acl="public-read"):
+    """
+    function to upload a file to aws bucket
+    """
+    s3 = get_s3()
+    bucket_name = get_bucket_name()
+    random_hex = secrets.token_hex(8)
+    _, file_ext = os.path.splitext(file.filename)
+    file_name = random_hex + file_ext
+    file_name = folder + '/' + file_name
+    try:
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            file_name,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+    except Exception as e:
+        # TODO better way to handle exception
+        return False
+    return file_name
+
+
+def delete_file_from_s3(key):
+    """
+    function to delete file from s3 bucket
+    """
+    s3 = get_s3()
+    bucket_name = get_bucket_name()
+    try:
+        s3.delete_object(Bucket=bucket_name, Key=key)
+    except Exception as e:
+        # TODO better way to handle exception
+        return False
+    return True
 
 
 def privilege_required(privilege):

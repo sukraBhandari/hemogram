@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     title = db.Column(db.String(64))
-    profile_image = db.Column(db.String(20), nullable=False, default='default.jpg')
+    profile_image = db.Column(db.String(64), nullable=False, default='default.jpg')
     user_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_visit = db.Column(db.DateTime(), default=datetime.utcnow)
     account_confirmed = db.Column(db.Boolean, default=False)
@@ -493,7 +493,7 @@ class CellImage(db.Model):
     """
     __tablename__ = 'images'
     id = db.Column(db.Integer, primary_key=True)
-    img = db.Column(db.String(30), nullable=False)
+    img = db.Column(db.String(64), nullable=False)
     nucleated_cell_class = db.Column(db.Integer, default=0)
 
     smear_id = db.Column(db.Integer, db.ForeignKey('smears.id'), nullable=False)
