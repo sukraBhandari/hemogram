@@ -92,7 +92,10 @@ In order to run this application on local machine, please follow these instructi
 	`flask shell`
 
 
-**Test:**
+
 1. To test app using unittest
 
 	`TODO`
+	
+**Auther:**
+Sukra Bhandari
