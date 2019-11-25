@@ -97,5 +97,6 @@ In order to run this application on local machine, please follow these instructi
 
 	`TODO`
 	
-**Auther:**
+**Author:**
+---
 Sukra Bhandari
