@@ -1,8 +1,11 @@
 Hemogram - Web application for reading Pheripheral Blood smears remotely
 ===
 
-**Hemogram** is a web application designed for a Clinical Laboratory Scientist/Pathologist in the hematology department. This application will serve as a user interface for laboratory scientists and pathologist to remotely
-access Blood Cell images to analyze and generate hematology results. The primary objective of this application is to support telelaboratory medicine.
+**Hemogram**, a web application, is developed as a prototype project that aims at providing a user-friendly yet robust platform to remotely examine peripheral blood smears by experienced laboratory professionals. The primary objective of this application is to support telelaboratory medicine and introduce the concept of tele-hematology to provide remote smear evaluation service to
+resource-limited clinics. Implementing Hemogram to resource-limited clinics can provide added laboratory support in diagnosing
+hematologic disorders and alleviate the problem of shortage of laboratory professionals.
+
+**App url** - http://hemogram.labmed.uw.edu/
 
 Table of Contents
 ---
@@ -19,13 +22,21 @@ Technologies
 ---
 Back-end: Python3.6, Flask, Jinja2, PostgreSQL, SQLAlchemy
 
-Front-end: Bootstrap, Javascript, jQuery
+Front-end: Bootstrap, Javascript, jQuery, Ajax, HTML, CSS
+
+Hosting: Heroku
+
+Object Storage: Amazon Web Services S3
 
 Features
 ---
-Admin - User Registration, Assign Roles
+Admin - User Management, Assign Roles
 
 Users - Login, Logout, Update Profile, Update Password
+
+System - Pending Log, Event Trace, New Sample Alert
+
+Smear Evaluation - Drag and Drop, Context Menu, Cell Morphologoy Annotation, Final Laboratory Report
 
 Installation
 ---
