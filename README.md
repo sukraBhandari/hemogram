@@ -151,7 +151,7 @@ Demo of Hemogam applicaiton via screenshots.
 ![clinicProfile](https://user-images.githubusercontent.com/7229266/71325609-1bed6280-24a4-11ea-9b62-ba920b11cee7.jpg)
 
 ---
-* ### Patient Blood Cells for evaluations
+* ### Patient Blood Cells for evaluation
 ![wbc](https://user-images.githubusercontent.com/7229266/71325632-6f5fb080-24a4-11ea-9f0f-bf98b7ba4861.jpg)
 
 ---
@@ -168,7 +168,7 @@ Demo of Hemogam applicaiton via screenshots.
 ![morph](https://user-images.githubusercontent.com/7229266/71325638-81d9ea00-24a4-11ea-93e0-dc63e4d55868.jpg)
 
 ---
-* ### Final report for Doctors/Provider
+* ### Final report for Doctors/Providers
 ![final](https://user-images.githubusercontent.com/7229266/71325648-8ef6d900-24a4-11ea-8540-070d38f193e8.jpg)
 
 
