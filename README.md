@@ -7,6 +7,10 @@ a variety of toxic, infectious, and hematologic disorders. In addition to provid
 
 **App url** - http://hemogram.labmed.uw.edu/
 
+**App Infrastructure** - https://github.com/sukraBhandari/Hemogram_AWS
+
+**CI/CD using AWS CodePipeline and Elastic Beanstalk** - https://github.com/sukraBhandari/Hemogram_CICD_Beanstalk
+
 Table of Contents
 ---
 1. Technologies
